@@ -33,8 +33,6 @@ const login = (req, res) => {
 
     if (memberDTO) {
       console.log('DTO 데이터:', memberDTO);
-      setSession(req, memberDTO); // 세션 설정
-      printSessionInfo(req); // 세션 정보 출력
       res.json({
         success: true,
         member: {
@@ -53,49 +51,8 @@ const login = (req, res) => {
     }
   });
 };
-const setSession = (req, memberDTO) => {
-  //세션 저장 함수
-  req.session.memberInfo = {
-    member_id: memberDTO.member_id,
-    member_name: memberDTO.member_name,
-    member_nickname: memberDTO.member_nickname,
-    member_engname: memberDTO.member_engname,
-    member_email: memberDTO.member_email,
-    member_major: memberDTO.member_major,
-    member_number: memberDTO.member_number,
-    member_isadmin: memberDTO.member_isadmin,
-    // 필요하다면 다른 필드들도 추가 가능
-  };
-};
-const printSessionInfo = req => {
-  const sessionData = req.session.memberInfo;
-  //세션 정보 출력
-  if (sessionData) {
-    console.log('현재 세션 정보:', sessionData);
-  } else {
-    console.log('세션 정보가 없습니다.');
-  }
-};
-const getSessionInfo = (req, res) => {
-  //세션 출력
-  const sessionData = req.session.memberInfo;
-  if (sessionData) {
-    res.json({
-      success: true,
-      member: sessionData,
-    });
-    console.log('getSession: ', sessionData);
-  } else {
-    res.json({
-      success: false,
-      message: '세션 정보가 없습니다.',
-    });
-  }
-};
+
 module.exports = {
   getMemberByIdAndPassword,
-  setSession,
-  printSessionInfo,
   login,
-  getSessionInfo,
 };
