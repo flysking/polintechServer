@@ -34,12 +34,9 @@ app.get('/getAllBoards', (req, res) => {
       res.status(500).json({success: false});
       return;
     }
-
     res.json({success: true, boards});
   });
 });
-
-app.get('/getSession', MemberDAO.getSessionInfo);
 
 // ... 기타 라우터 및 코드 ...
 
