@@ -6,7 +6,7 @@ class BoardDTO {
     board_mid,
     board_hits = 0,
     board_category,
-    board_postdate,
+    board_postdate
   }) {
     this.board_id = board_id;
     this.board_title = board_title;
@@ -24,7 +24,7 @@ class BoardDTO {
       board_mid: this.board_mid,
       board_hits: this.board_hits,
       board_category: this.board_category,
-      board_postdate: this.board_postdate,
+      board_postdate: this.board_postdate
     };
   }
 }
