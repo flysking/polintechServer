@@ -1,18 +1,11 @@
 {
   "name": "Polintech",
-  "displayName": "Polintech"
+  "displayName": "Polintech",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "90147cf7-7f78-4ba3-b7b0-8cc88a481755"
+      }
+    }
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

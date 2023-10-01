@@ -1,21 +1,20 @@
 // App.tsx
 import React, {useState} from 'react';
-import {View, Button} from 'react-native';
-import Login from './src/Login';
-import CreateBoard from './src/CreateBoard';
-import ViewBoards from './src/ViewBoard';
+import {View, Button, SafeAreaView} from 'react-native';
+import CreateBoard from './CreateBoard';
+import ViewBoards from './ViewBoard';
 
-const App = () => {
+const Main = () => {
   const [activeScreen, setActiveScreen] = useState<
     'login' | 'createBoard' | 'viewBoards'
   >('login');
 
   return (
+    <SafeAreaView>
     <View style={{flex: 1}}>
-      {activeScreen === 'login' && <Login />}
       {activeScreen === 'createBoard' && <CreateBoard />}
       {activeScreen === 'viewBoards' && <ViewBoards />}
-
+      
       <View
         style={{
           flexDirection: 'row',
@@ -26,7 +25,7 @@ const App = () => {
         <Button title="Login" onPress={() => setActiveScreen('login')} />
         <Button
           title="Create Board"
-          onPress={() => setActiveScreen('createBoard')}
+          onPress={() => {console.log("보드버튼누름");setActiveScreen('createBoard')}}
         />
         <Button
           title="View Boards"
@@ -34,7 +33,8 @@ const App = () => {
         />
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 
-export default App;
+export default Main;

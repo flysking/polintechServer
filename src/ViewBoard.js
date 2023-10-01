@@ -7,7 +7,7 @@ const ViewBoards = () => {
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await fetch('http://10.0.2.2:3000/getAllBoards');
+        const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/getAllBoards');
         const json = await response.json();
         if (json.success) {
           setBoards(json.boards);

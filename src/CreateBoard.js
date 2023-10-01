@@ -10,8 +10,9 @@ const CreateBoard = () => {
   useEffect(() => {
     const fetchMemberSession = async () => {
       try {
-        const response = await fetch('http://10.0.2.2:3000/getMemberSession');
+        const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/getMemberSession');
         const json = await response.json();
+        console.log('서버로부터의 응답:', json); // 서버에서 받은 응답을 로그로 출력
         if (json.success) {
           setMid(json.member.member_id);
         }
@@ -24,7 +25,7 @@ const CreateBoard = () => {
   }, []);
   const createBoard = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:3000/createBoard', {
+      const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/createBoard', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
