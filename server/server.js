@@ -33,7 +33,7 @@ app.post('/logout', (req, res) => {
 app.post('/CreateBoard', BoardDAO.CreateBoard);
 app.get('/getAllBoards', (req, res) => {
   //게시글 목록 조회
-  BoardDAO.BoardList((error, boards) => {
+  BoardDAO.getAllBoards((error, boards) => {
     if (error) {
       console.error(error,'서버에러발생');
       res.status(500).json({success: false});

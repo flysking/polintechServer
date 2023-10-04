@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function MainTest(){
+function MainTest () {
 
     const [boards, setBoards] = useState([]);
-    
+
     useEffect(() => {
         const fetchBoards = async () => {
         try {
