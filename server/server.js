@@ -31,7 +31,7 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/CreateBoard', BoardDAO.CreateBoard);
-app.get('/BoardList', (req, res) => {
+app.get('/getAllBoards', (req, res) => {
   //게시글 목록 조회
   BoardDAO.BoardList((error, boards) => {
     if (error) {
