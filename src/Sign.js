@@ -5,10 +5,11 @@ import {
     TextInput,
     Button,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    ScrollView
   } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView} from 'react-native-safe-area-context';
 
 
 function Sign(){
@@ -64,6 +65,7 @@ function Sign(){
     const handleCancel = () => {};
     return (
         <SafeAreaView>
+          <ScrollView>
           <TextInput
             style={styles.input}
             value={id}
@@ -212,6 +214,7 @@ function Sign(){
           </View>
           <Button title="회원가입" onPress={loginUser} />
           <Button title="가입취소" onPress={handleCancel} />
+          </ScrollView>
         </SafeAreaView>
       );
 }

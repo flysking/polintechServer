@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button} from 'react-native';
-import {saveLoginInfo, loadUserInfo, logOut} from './Common/CommonDAO';
+import {saveLoginInfo, loadUserInfo, logOut} from './src/Common/CommonDAO';
 const BoardDetail = ({route}) => {
   const [board, setBoard] = useState(null);
   const [id, setId] = useState('');
@@ -14,7 +14,7 @@ const BoardDetail = ({route}) => {
   const boardId = route.params.boardId; // 게시글 id
 
   useEffect(() => {
-    fetch(`http://10.0.2.2:3000/BoardDetail/${boardId}`)
+    fetch(`https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/BoardDetail/${boardId}`)
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -56,7 +56,7 @@ const BoardDetail = ({route}) => {
       return;
     }
 
-    fetch(`http://10.0.2.2:3000/LikePlus`, {
+    fetch(`https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/LikePlus`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -30,6 +30,8 @@ app.post('/logout', (req, res) => {
   res.json({success: true});
 });
 
+app.post('/sign',MemberDAO.signUser);
+
 app.post('/CreateBoard', BoardDAO.CreateBoard);
 app.get('/getAllBoards', (req, res) => {
   //게시글 목록 조회
@@ -100,33 +102,6 @@ app.get('/BoardDetail/:boardId', (req, res) => {
     });
   });
 });
-
-// app.post('/LikePlus/:boardId', (req, res) => {
-//   BoardLikesDAO.CreateBoardLikes(req, res, (error, results) => {
-//     if (error) {
-//       // 오류 처리
-//       res.json({
-//         success: false,
-//         message: '오류가 발생했습니다.',
-//       });
-//       return;
-//     }
-
-//     if (results && results.insertId) {
-//       res.json({
-//         success: true,
-//         isLiked: true,
-//         board: {board_id: results.insertId, ...boardLikeData},
-//       });
-//     } else {
-//       res.json({
-//         success: true,
-//         isLiked: false,
-//         message: '좋아요가 제거되었습니다.',
-//       });
-//     }
-//   });
-// });
 app.post('/LikePlus', (req, res) => {
   const memberId = req.body.memberId;
   const boardId = req.body.boardId;

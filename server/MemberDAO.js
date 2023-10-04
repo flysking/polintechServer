@@ -21,6 +21,14 @@ const getMemberByIdAndPassword = (id, pw, req, callback) => {
     }
   });
 };
+const signUser=(req,res)=>{
+  const user=req.body;
+
+  const query=
+    'insert into polintech.member (member_id, member_pw, member_name, member_engname, member_nickname,'
+}
+
+
 const login = (req, res) => {
   const {id, pw} = req.body;
 
@@ -55,4 +63,5 @@ const login = (req, res) => {
 module.exports = {
   getMemberByIdAndPassword,
   login,
+  signUser,
 };
