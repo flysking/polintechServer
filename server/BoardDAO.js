@@ -49,11 +49,13 @@ const getAllBoards = callback => {
   db.query(query, (error, results) => {
     if (error) {
       callback(error, null);
+      console.error(error);
       return;
     }
 
     const boards = results.map(boardData => new BoardDTO(boardData));
     callback(null, boards);
+    console.log(boards);
   });
 };
 

@@ -17,7 +17,9 @@ function App(){
                 <Stack.Screen name="Loading" component={Loading} />
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Sign" component={Sign} />
-                <Stack.Screen name="MainTest" component={MainTest} />
+                <Stack.Screen name="MainTest" component={MainTest} 
+                 options={{title :'메인화면',}}
+                />
             </Stack.Navigator>
         </NavigationContainer>
 

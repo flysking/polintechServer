@@ -13,7 +13,7 @@ const Login = ({navigation}) => {
     if(!isLoggedIn){
       const timer = setTimeout(() => {
         Alert.alert("로그인이 필요합니다.");
-      }, 1000); // 3초 대기 (원하는 시간으로 조정)
+      }, 1000); // 1초 대기 (원하는 시간으로 조정)
       return() => clearTimeout(timer);
     }
   },[isLoggedIn]);
@@ -41,7 +41,7 @@ const Login = ({navigation}) => {
         setNickname(json.member.nickname);
         setName(json.member.name);
         setIsLoggedIn(true);
-        navigation.navigate('Main');
+        navigation.navigate('MainTest');
       } else {
         Alert.alert('로그인 실패');
       }

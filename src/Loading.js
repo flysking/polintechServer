@@ -19,7 +19,7 @@ const Loading=({ navigation })=>{
         <SafeAreaView style={styles.full}>
             <Text style={styles.text}>Welcome Polintech</Text>
             <FastImage
-                source={require('../image/tools-7049_128.gif')} 
+                source={{ uri: 'https://github.com/flysking/polintechServer/raw/master/image/tools-7049_128.gif', }} 
                 style={styles.image}
                 resizeMode={FastImage.resizeMode.contain}
             />
