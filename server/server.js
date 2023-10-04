@@ -35,7 +35,7 @@ app.get('/BoardList', (req, res) => {
   //게시글 목록 조회
   BoardDAO.BoardList((error, boards) => {
     if (error) {
-      console.error(error);
+      console.error(error,'서버에러발생');
       res.status(500).json({success: false});
       return;
     }
