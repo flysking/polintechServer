@@ -4,7 +4,7 @@ class BoardDTO {
     board_title,
     board_content,
     board_mid,
-    board_hits = 0,
+    board_hits,
     board_category,
     board_postdate
   }) {
