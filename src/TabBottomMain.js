@@ -1,9 +1,9 @@
 import React from 'react';
-import TabHome from "TabHome";
-import TabNotice from "TabNotice";
-import TabPopular from "TabPopular";
-import TabSearch from "TabSearch";
-import TabWrite from "TabWrite";
+import TabHome from "./TabHome";
+import TabNotice from "./TabNotice";
+import TabPopular from "./TabPopular";
+import TabSearch from "./TabSearch";
+import TabWrite from "./TabWrite";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab=createBottomTabNavigator();
