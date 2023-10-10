@@ -30,14 +30,12 @@ app.post('/logout', (req, res) => {
   res.json({success: true});
 });
 
-app.post('/sign',MemberDAO.signUser);
-
 app.post('/CreateBoard', BoardDAO.CreateBoard);
-app.get('/getAllBoards', (req, res) => {
+app.get('/BoardList', (req, res) => {
   //게시글 목록 조회
-  BoardDAO.getAllBoards((error, boards) => {
+  BoardDAO.BoardList((error, boards) => {
     if (error) {
-      console.error(error,'서버에러발생');
+      console.error(error);
       res.status(500).json({success: false});
       return;
     }
@@ -102,6 +100,7 @@ app.get('/BoardDetail/:boardId', (req, res) => {
     });
   });
 });
+
 app.post('/LikePlus', (req, res) => {
   const memberId = req.body.memberId;
   const boardId = req.body.boardId;
@@ -109,7 +108,22 @@ app.post('/LikePlus', (req, res) => {
   console.log('memberId:', memberId);
   console.log('boardId:', boardId);
 
-  BoardLikesDAO.CreateBoardLikes(req, res);
+  BoardLikesDAO.CreateBoardLikes(req, res, () => {
+    // 좋아요가 성공적으로 처리된 후, 게시글의 좋아요 갯수를 조회합니다.
+    BoardLikesDAO.CountBoardLikes(boardId, (likeError, likeCount) => {
+      if (likeError) {
+        console.error('좋아요 갯수 조회 중 오류:', likeError);
+        res.status(500).json({
+          error: '데이터베이스 오류가 발생하였습니다(좋아요 갯수 조회).',
+        });
+        return;
+      }
+      console.error('좋아요 갯수 조회 :', likeCount);
+      // 응답: 좋아요 갯수와 함께 성공 메시지를 반환합니다.
+      res.json({success: true, likes: likeCount});
+      console.log('좋아요 갯수(server_버튼) :', likeCount);
+    });
+  });
 });
 
 // ... 기타 라우터 및 코드 ...
