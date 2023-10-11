@@ -39,7 +39,7 @@ const registerMember = (
   callback,
 ) => {
   //회원가입
-  const query = 'insert into polintech.member (member_id, member_pw, member_name, member_nickname, member_engname, member_email, member_major, member_birth, member_gender, member_iscert, member_isadmin, member_reportcount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0)';
+  const query = 'insert into polintech.member (member_id, member_pw, member_name, member_nickname, member_engname, member_email, member_major, member_birth, member_gender, member_iscert, member_isadmin, member_regidate, member_reportcount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, CURRENT_TIMESTAMP, 0)';
 
   db.query(
     query,
