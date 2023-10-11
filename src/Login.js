@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Button, TextInput, View, Alert, Text} from 'react-native';
+import {Button, TextInput, View, Alert, Text,StyleSheet} from 'react-native';
 
 const Login = ({navigation}) => {
   const [id, setId] = useState('');
@@ -72,6 +72,7 @@ const Login = ({navigation}) => {
         </>
       ) : (
         <>
+        <View style={styles.container}>
           <TextInput placeholder={'ID'} value={id} onChangeText={setId}  />
           <TextInput
             placeholder={'Pw'}
@@ -81,10 +82,81 @@ const Login = ({navigation}) => {
           />
           <Button title={'로그인'} onPress={loginUser} />
           <Button title={'회원가입'} onPress={toSign} />
+          </View>
         </>
       )}
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+  input: {
+    width: '75%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginVertical: 10,
+    paddingHorizontal: 10,
+  },
+  loginButton: {
+    backgroundColor: 'darkblue',
+    borderRadius: 5,
+    paddingVertical: 14,  //버튼 세로
+    paddingHorizontal: 70,  //버튼 가로
+    marginTop: 10,  //버튼 윗쪽 마진
+  },
+  loginButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  signupButton: {
+    backgroundColor: 'darkblue',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginTop: 1,
+  },
+  signupButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  passwordRecoveryButton: { // Added missing colon here
+    backgroundColor: 'darkblue',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginTop: 1,
+  },
+  passwordRecoveryButtonText: { // Added missing colon here
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center', // 가운데로 정렬
+    width: '100%',
+    marginTop: 10,
+    marginHorizontal: 3, // 가로 간격 조정
+  },
+});
 export default Login;

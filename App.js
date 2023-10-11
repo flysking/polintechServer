@@ -3,6 +3,7 @@ import Loading from './src/Loading';
 import MainTest from './src/MainTest';
 import Main from './src/Main';
 import Login from './src/Login';
+import LoginScreen from './src/LoginScreen';
 import Sign from './src/Sign';
 import TabBottomMain from "./src/TabBottomMain";
 import {NavigationContainer} from '@react-navigation/native';
@@ -14,8 +15,10 @@ const BottomStack=createNativeStackNavigator();
 
 function App(){
     return(
+        
         <NavigationContainer>
             <RootStack.Navigator>
+                <RootStack.Screen name="LoginScreen" component={LoginScreen} />
                 <RootStack.Screen name="Loading" component={Loading} />
                 <RootStack.Screen name="Login" component={Login} />
                 <RootStack.Screen name="Sign" component={Sign} />
@@ -23,14 +26,8 @@ function App(){
                  options={{title :'메인화면',}}
                 />
             </RootStack.Navigator>
-            <BottomStack.Navigator>
-                <BottomStack.Screen
-                name="Bottom"
-                component={TabBottomMain} 
-                options={{headerShown:false}}
-                />
-            </BottomStack.Navigator>
         </NavigationContainer>
+
     );
 }
 export default App;
