@@ -30,6 +30,77 @@ app.post('/logout', (req, res) => {
   res.json({success: true});
 });
 
+const handleSign = (req, res) => {
+  const {
+    id,
+    pw,
+    name,
+    nickname,
+    engname,
+    email,
+    major,
+    birth,
+    gender,
+    iscert,
+    isAdmin,
+    regidate,
+    reportcount,
+  } = req.body;
+
+  MemberDAO.registerMember(
+    id,
+    pw,
+    name,
+    nickname,
+    engname,
+    email,
+    major,
+    birth,
+    gender,
+    iscert,
+    isAdmin,
+    regidate,
+    reportcount,
+    req,
+    (error, memberDTO) => {
+      //회원가입 로직
+      if (error) {
+        console.error(error);
+        res.status(500).json({success: false});
+        return;
+      }
+
+      if (memberDTO) {
+        console.log('DTO 데이터:', memberDTO); // 여기서 DTO 로그를 출력합니다.
+
+        res.json({
+          success: true,
+          member: {
+            id: memberDTO.member_id,
+            pw: memberDTO.member_pw,
+            name: memberDTO.member_name,
+            nickname: memberDTO.member_nickname,
+            engname: memberDTO.member_engname,
+            email: memberDTO.member_email,
+            major: memberDTO.member_major,
+            birth: memberDTO.member_birth,
+            gender: memberDTO.member_gender,
+            iscert: memberDTO.member_iscert,
+            isadmin: memberDTO.member_isadmin,
+            regidate: memberDTO.member_regidate,
+            reportcount: memberDTO.member_reportcount,
+          },
+        });
+      } else {
+        res.json({success: false});
+      }
+    },
+  );
+};
+
+app.post('/Sign', handleSign);
+
+
 app.post('/CreateBoard', BoardDAO.CreateBoard);
 app.get('/BoardList', (req, res) => {
   //게시글 목록 조회

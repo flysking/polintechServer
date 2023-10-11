@@ -49,7 +49,7 @@ function Sign(){
         console.log('서버로부터의 응답 :', json);
   
         if (id === '') {
-          Alert.alert('아이디를 입력은 필수입니다!');
+          Alert.alert('아이디 입력은 필수입니다!');
         } else if (!passwordRegex.test(pw)) {
           Alert.alert('비밀번호 입력은 필수입니다!');
         } else if (pw === '') {
