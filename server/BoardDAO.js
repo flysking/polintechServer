@@ -76,7 +76,6 @@ const BoardList = callback => {
     callback(null, boards);
   });
 };
-
 const BoardHitsUpdate = (boardId, callback) => {
   //조회수 증가
   const query =

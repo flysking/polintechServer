@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity,StyleSheet} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function MainTest () {
+function MainTest ({navigation}) {
 
     const [boards, setBoards] = useState([]);
 
@@ -20,34 +20,97 @@ function MainTest () {
         };
 
         fetchBoards();
-    }, []);
+    }, []); 
+    const handleBoardList=()=>{
+        navigation.navigate('TabBottomMain');
+    };
+    const handleBoardDetail=(board_id)=>{
+        navigation.navigate('BoardDetail',{board_id:board_id});
+    };
+    const top5Board = boards.slice(0,5);
 
     return(
-        <SafeAreaView>
-            <View>
-                <Text>
-                    상단 뷰
-
-                </Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.topMenu}>
+                <TouchableOpacity onPress={handleBoardList}
+                style={styles.category}
+                >
+                    <Text>전체</Text>
+                </TouchableOpacity >
+                <TouchableOpacity onPress={handleBoardList}>
+                    <Text>학과</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleBoardList}>
+                    <Text>공지</Text>
+                </TouchableOpacity>
             </View>
-
             <View>
-        <FlatList
-            data={boards}
-            keyExtractor={item => item.board_id.toString()}
-            renderItem={({item}) => (
-            <View>
-                <Text>{item.board_title}</Text>
-                <Text>{item.board_content}</Text>
-                <Text>{item.board_mid}</Text>
-                <Text>{item.board_category}</Text>
-          </View>
-        )}
-      />
-    </View>
-    </SafeAreaView>
-
-    );
-
- }
+                <Text style={{marginTop:20, color:'black', fontSize:15,}}>게시글 목록</Text>
+                <View style={styles.listContainer}>
+                    <FlatList 
+                        data={top5Board}
+                        keyExtractor={item => item.board_id.toString()}
+                        renderItem={({item}) => (
+                    <View style={styles.list}>
+                        <TouchableOpacity /*onPress={handleBoardDetail(item.board_id)}*/style={{flexDirection:'row'}}>
+                                <Text style={{color:'black'}}>{item.board_title}</Text>
+                                <Text style={{color:'black',marginLeft:5}}>[{item.board_hits}]</Text>
+                        </TouchableOpacity>
+                    </View>
+                    )}
+                    />
+                </View>
+                <TouchableOpacity onPress={handleBoardList}>
+                    <Text style={{color:'gray', marginLeft:190}}>더보기</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
+    ); 
+};
+const styles=StyleSheet.create({
+    title:{
+        color:'white',
+        fontSize:20,
+        fontWeight:'bold',
+        textAlign:'left',
+    },
+    container:{
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    topMenu:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        width:'100%',
+        paddingHorizontal:60,
+        paddingTop:10,
+        paddingBottom:10,
+        borderBlockColor:'gray',
+        borderBottomWidth:1,
+    },
+    category:{
+        fontSize:15,
+    },
+    listContainer:{
+        flexDirection:'row',
+        marginTop:10,
+        paddingVertical:10,
+        width:230,
+        borderBlockColor:'#003497',
+        backgroundColor:'#E6FFFF',
+        borderRadius:15,
+        borderWidth:3,
+    },
+    list:{
+        flex:1,
+        width:'90%',
+        paddingHorizontal:5,
+        paddingVertical:10,
+        marginLeft:10,
+        borderTopColor:'#D8D8D8',
+        borderTopWidth:1,
+        borderBottomColor:'#D8D8D8',
+        borderBottomWidth:1,
+    },
+});
 export default MainTest;

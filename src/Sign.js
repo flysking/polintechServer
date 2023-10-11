@@ -6,11 +6,12 @@ import {
     Button,
     TouchableOpacity,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    Alert,
   } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { SafeAreaView} from 'react-native-safe-area-context';
-
+import {useNavigation} from '@react-navigation/native';
 
 function Sign(){
   const [id, setId] = useState(''); //학번

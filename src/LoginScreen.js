@@ -1,23 +1,65 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Image, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button, Alert,View, TextInput, TouchableOpacity, StyleSheet, Text, Image, Keyboard } from 'react-native';
 
-const LoginScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginScreen = ({navigation}) => {
+  const [id, setId] = useState('');
+  const [pw, setPw] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [name, setName] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleLogin = () => {
-    Keyboard.dismiss(); // Dismiss the keyboard when the login button is pressed
+  useEffect(()=>{
 
-    if (username === 'user' && password === 'pass') {
-      // Successful login logic here
-      setErrorMessage('');
-    } else {
-      setErrorMessage('Invalid username or password');
+    if(!isLoggedIn){
+      const timer = setTimeout(() => {
+        Alert.alert("로그인이 필요합니다.");
+      }, 1000); // 1초 대기 (원하는 시간으로 조정)
+      return() => clearTimeout(timer);
+    }
+  },[isLoggedIn]);
+
+  const logoutUser = () => {
+    setId('');
+    setPw('');
+    setNickname('');
+    setName('');
+    setIsLoggedIn(false);
+    Alert.alert('로그아웃 성공');
+  };
+  const handleLogin = async () => {
+    Keyboard.dismiss(); // Dismiss the keyboard when the login button is pressed
+    try {
+      const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: id,
+          pw: pw,
+        }),
+      });
+      const json = await response.json();
+      console.log('서버로부터의 응답:', json); // 서버에서 받은 응답을 로그로 출력
+
+      if (json.success) {
+        Alert.alert('로그인 성공');
+        Alert.alert('로그인 성공');
+        setId(json.member.id); // 사용자 ID 저장
+        setNickname(json.member.nickname);
+        setName(json.member.name);
+        setIsLoggedIn(true);
+        navigation.navigate('MainTest');
+      } else {
+        Alert.alert('로그인 실패');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
-
   const handleSignUp = () => {
+    navigation.navigate('Sign');
     // Replace this with your registration logic
     console.log('User signed up:', username);
     setErrorMessage('Registration successful!');
@@ -32,6 +74,14 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      {isLoggedIn ? (
+        <>
+          <Text>닉네임: {nickname}</Text>
+          <Text>이름: {name}</Text>
+          <Button title={'Logout'} onPress={logoutUser} />
+        </>
+      ):(
+        <>
       <Image
         source={require('../image/logo1.png')} // Replace with the actual image file path
         style={styles.image}
@@ -39,16 +89,16 @@ const LoginScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="ID"
-        onChangeText={text => setUsername(text)}
-        value={username}
+        onChangeText={setId}
+        value={id}
         keyboardType="email-address" // Use the email address keyboard type for ID
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry
-        onChangeText={text => setPassword(text)}
-        value={password}
+        onChangeText={setPw}
+        value={pw}
         keyboardType="default" // Use the default keyboard type for the password
       />
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
@@ -64,6 +114,8 @@ const LoginScreen = () => {
       </View>
       {errorMessage !== '' && (
         <Text style={styles.errorText}>{errorMessage}</Text>
+      )}
+        </>
       )}
     </View>
   );
