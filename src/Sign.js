@@ -13,7 +13,7 @@ import {Picker} from '@react-native-picker/picker';
 import { SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 
-function Sign(){
+function Sign( {navigation} ){
   const [id, setId] = useState(''); //학번
   const [idMessage, setIdMessage] = useState(''); //중복확인
   const [pw, setPw] = useState(''); //비밀번호
@@ -63,7 +63,10 @@ function Sign(){
         console.error(error);
       }
     };
-    const handleCancel = () => {};
+    const handleCancel = () => {
+      navigation.navigate('LoginScreen');
+      
+    };
     return (
         <SafeAreaView>
           <ScrollView>

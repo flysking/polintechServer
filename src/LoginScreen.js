@@ -61,13 +61,12 @@ const LoginScreen = ({navigation}) => {
   const handleSignUp = () => {
     navigation.navigate('Sign');
     // Replace this with your registration logic
-    console.log('User signed up:', username);
-    setErrorMessage('Registration successful!');
+    console.log('User signed up:');
   };
 
   const handlePasswordRecovery = () => {
     // Add your password recovery logic here
-    console.log('Password recovery initiated for:', username);
+    console.log('Password recovery initiated for:');
     // You can implement the password recovery logic as needed, such as sending a reset email.
     // If successful, you can set a message or navigate to a password recovery screen.
   };

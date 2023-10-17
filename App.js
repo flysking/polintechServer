@@ -21,6 +21,12 @@ function App(){
         
         <NavigationContainer>
             <RootStack.Navigator>
+            <RootStack.Screen name="Loading" component={Loading} 
+                options={{headerShown:false}}/>
+                <RootStack.Screen name="LoginScreen" component={LoginScreen}
+                options={{headerShown:false}} />
+                <RootStack.Screen name="Sign" component={Sign} 
+                options={{headerShown:false}}/>
                 <RootStack.Screen name="MainTest" component={MainTest} 
                  options={{title :'Polintech',headerBackVisible:false,
                     headerStyle:{
@@ -42,17 +48,12 @@ function App(){
                     )
                 }}
                 />
-                <RootStack.Screen name="Loading" component={Loading} 
-                options={{headerShown:false}}/>
-                <RootStack.Screen name="LoginScreen" component={LoginScreen}
-                options={{headerShown:false}} />
-                <RootStack.Screen name="Sign" component={Sign} 
-                options={{headerShown:false}}/>
+
                 {/*
                 <RootStack.Screen name="BoardDetail" component={BoardDetail}
                 options={{title:"게시글 상세보기"}}
                 />
-                */}
+                 */}
                 <RootStack.Screen name="TabBottomMain" component={TabBottomMain}
                 options={{title:"게시판"}}
                 />

@@ -52,7 +52,7 @@ function MainTest ({navigation}) {
                         keyExtractor={item => item.board_id.toString()}
                         renderItem={({item}) => (
                     <View style={styles.list}>
-                        <TouchableOpacity /*onPress={handleBoardDetail(item.board_id)}*/style={{flexDirection:'row'}}>
+                        <TouchableOpacity /*onPress={handleBoardDetail(item.board_id)} */ style={{flexDirection:'row'}}>
                                 <Text style={{color:'black'}}>{item.board_title}</Text>
                                 <Text style={{color:'black',marginLeft:5}}>[{item.board_hits}]</Text>
                         </TouchableOpacity>
