@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button} from 'react-native';
-import {saveLoginInfo, loadUserInfo, logOut} from './src/Common/CommonDAO';
+import {saveLoginInfo, loadUserInfo, logOut} from './src/Common/Common';
 const BoardDetail = ({route}) => {
   const [board, setBoard] = useState(null);
   const [id, setId] = useState('');
@@ -56,7 +56,7 @@ const BoardDetail = ({route}) => {
       return;
     }
 
-    fetch(`https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/LikePlus`, {
+    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/LikePlus`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

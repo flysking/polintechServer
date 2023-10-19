@@ -9,7 +9,7 @@ function MainTest ({navigation}) {
     useEffect(() => {
         const fetchBoards = async () => {
         try {
-            const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
+            const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
             const json = await response.json();
             if (json.success) {
             setBoards(json.boards);

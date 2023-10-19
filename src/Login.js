@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Button, TextInput, View, Alert, Text,StyleSheet} from 'react-native';
+import { saveLoginInfo } from './src/Common/Common';
 
 const Login = ({navigation}) => {
   const [id, setId] = useState('');
@@ -20,7 +21,7 @@ const Login = ({navigation}) => {
 
   const loginUser = async () => {
     try {
-      const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/login', {
+      const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

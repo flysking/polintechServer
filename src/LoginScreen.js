@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Alert,View, TextInput, TouchableOpacity, StyleSheet, Text, Image, Keyboard } from 'react-native';
+import { saveLoginInfo, loadUserInfo, logOut } from './src/Common/Common';
 
 const LoginScreen = ({navigation}) => {
   const [id, setId] = useState('');
@@ -14,10 +15,24 @@ const LoginScreen = ({navigation}) => {
     if(!isLoggedIn){
       const timer = setTimeout(() => {
         Alert.alert("로그인이 필요합니다.");
-      }, 1000); // 1초 대기 (원하는 시간으로 조정)
+      }, 500); // 1초 대기 (원하는 시간으로 조정)
       return() => clearTimeout(timer);
     }
   },[isLoggedIn]);
+
+  useEffect(() => {
+    // AsyncStorage에서 사용자 정보를 불러와 로그인 상태를 판단합니다.
+    const checkLoginStatus = async () => {
+      const userInfo = await loadUserInfo();
+      if (userInfo) {
+        setNickname(userInfo.nickname);
+        setName(userInfo.name);
+        setIsLoggedIn(true);
+      }
+    };
+    checkLoginStatus();
+  }, []);
+
 
   const logoutUser = () => {
     setId('');
@@ -28,9 +43,9 @@ const LoginScreen = ({navigation}) => {
     Alert.alert('로그아웃 성공');
   };
   const handleLogin = async () => {
-    Keyboard.dismiss(); // Dismiss the keyboard when the login button is pressed
+    Keyboard.dismiss(); //휴대폰 키보드를 닫음
     try {
-      const response = await fetch('https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/login', {
+      const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +67,7 @@ const LoginScreen = ({navigation}) => {
         setIsLoggedIn(true);
         navigation.navigate('MainTest');
       } else {
-        Alert.alert('로그인 실패');
+        Alert.alert('로그인에 실패하였습니다.\n아이디 또는 비밀번호를 확인해주세요.');
       }
     } catch (error) {
       console.error(error);
@@ -67,8 +82,7 @@ const LoginScreen = ({navigation}) => {
   const handlePasswordRecovery = () => {
     // Add your password recovery logic here
     console.log('Password recovery initiated for:');
-    // You can implement the password recovery logic as needed, such as sending a reset email.
-    // If successful, you can set a message or navigate to a password recovery screen.
+    //비밀번호 복구 신청 페이지로 이동합니다.
   };
 
   return (
