@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Alert,View, TextInput, TouchableOpacity, StyleSheet, Text, Image, Keyboard } from 'react-native';
-import { saveLoginInfo, loadUserInfo, logOut } from './src/Common/Common';
+import { saveLoginInfo, loadUserInfo, logOut } from './Common';
 
 const LoginScreen = ({navigation}) => {
   const [id, setId] = useState('');
@@ -15,7 +15,7 @@ const LoginScreen = ({navigation}) => {
     if(!isLoggedIn){
       const timer = setTimeout(() => {
         Alert.alert("로그인이 필요합니다.");
-      }, 500); // 1초 대기 (원하는 시간으로 조정)
+      }, 500); 
       return() => clearTimeout(timer);
     }
   },[isLoggedIn]);
@@ -28,13 +28,16 @@ const LoginScreen = ({navigation}) => {
         setNickname(userInfo.nickname);
         setName(userInfo.name);
         setIsLoggedIn(true);
+      }else{
+        
       }
     };
     checkLoginStatus();
   }, []);
 
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    await logOut();
     setId('');
     setPw('');
     setNickname('');
@@ -44,6 +47,7 @@ const LoginScreen = ({navigation}) => {
   };
   const handleLogin = async () => {
     Keyboard.dismiss(); //휴대폰 키보드를 닫음
+    console.log('로그인 버튼 눌렀어용',id,'/',pw);
     try {
       const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/login', {
         method: 'POST',
@@ -60,12 +64,32 @@ const LoginScreen = ({navigation}) => {
 
       if (json.success) {
         Alert.alert('로그인 성공');
-        Alert.alert('로그인 성공');
         setId(json.member.id); // 사용자 ID 저장
         setNickname(json.member.nickname);
         setName(json.member.name);
         setIsLoggedIn(true);
-        navigation.navigate('MainTest');
+
+        const userInfo = {
+          id: json.member.id,
+          pw: json.member.pw,
+          name: json.member.name,
+          engname: json.member.engname,
+          nickname: json.member.nickname,
+          email: json.member.email,
+          major:json.member.majorname,
+          birth:json.member.birth,
+          number:json.member.number,
+          gender:json.member.gender,
+          iscert:json.member.iscert,
+          isAdmin:json.member.isAdmin,
+          grade:json.member.grade,
+          majorname:json.member.majorname,
+        };
+        console.log('유저정보확인:',userInfo),
+        await saveLoginInfo(userInfo);
+
+        navigation.navigate('CheckIsCert');
+
       } else {
         Alert.alert('로그인에 실패하였습니다.\n아이디 또는 비밀번호를 확인해주세요.');
       }
@@ -96,8 +120,9 @@ const LoginScreen = ({navigation}) => {
       ):(
         <>
       <Image
-        source={require('../image/logo1.png')} // Replace with the actual image file path
+        source={require('../image/Logo.png')} // Replace with the actual image file path
         style={styles.image}
+        resizeMode='contain'
       />
       <TextInput
         style={styles.input}
@@ -142,9 +167,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   image: {
-    width: 150,
+    width: 210,
     height: 150,
-    marginBottom: 20,
+    marginBottom:-10
   },
   input: {
     width: '75%',

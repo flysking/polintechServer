@@ -24,9 +24,6 @@ function MainTest ({navigation}) {
     const handleBoardList=()=>{
         navigation.navigate('TabBottomMain');
     };
-    const handleBoardDetail=(board_id)=>{
-        navigation.navigate('BoardDetail',{board_id:board_id});
-    };
     const top5Board = boards.slice(0,5);
 
     return(
@@ -52,7 +49,7 @@ function MainTest ({navigation}) {
                         keyExtractor={item => item.board_id.toString()}
                         renderItem={({item}) => (
                     <View style={styles.list}>
-                        <TouchableOpacity /*onPress={handleBoardDetail(item.board_id)} */ style={{flexDirection:'row'}}>
+                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { board_id: item.board_id })} style={{flexDirection:'row'}}>
                                 <Text style={{color:'black'}}>{item.board_title}</Text>
                                 <Text style={{color:'black',marginLeft:5}}>[{item.board_hits}]</Text>
                         </TouchableOpacity>
@@ -95,11 +92,11 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         marginTop:10,
         paddingVertical:10,
-        width:230,
+        width:300,
         borderBlockColor:'#003497',
-        backgroundColor:'#E6FFFF',
-        borderRadius:15,
-        borderWidth:3,
+        //backgroundColor:'#E6FFFF',
+        borderTopWidth:3,
+        borderBottomWidth:3,
     },
     list:{
         flex:1,

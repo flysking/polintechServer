@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button} from 'react-native';
-import {saveLoginInfo, loadUserInfo, logOut} from './src/Common/Common';
+//import {saveLoginInfo, loadUserInfo, logOut} from './Common';
 const BoardDetail = ({route}) => {
   const [board, setBoard] = useState(null);
   const [id, setId] = useState('');
@@ -11,10 +11,10 @@ const BoardDetail = ({route}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [major, setMajor] = useState('');
   const [likeCount, setLikeCount] = useState(0); // 좋아요 개수 저장
-  const boardId = route.params.boardId; // 게시글 id
+  const boardId = route.params.board_id; // 게시글 id
 
   useEffect(() => {
-    fetch(`https://port-0-polintechserver-ac2nlkzlq8aw.sel4.cloudtype.app/BoardDetail/${boardId}`)
+    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardDetail/${boardId}`)
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -28,24 +28,6 @@ const BoardDetail = ({route}) => {
         console.error('데이터를 가져오는 데 오류가 발생했습니다:', error); // 그 외 오류 처리
       });
   }, [boardId]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const savedData = await loadUserInfo();
-
-      if (savedData) {
-        setId(savedData.id);
-        setNickname(savedData.nickname);
-        setName(savedData.name);
-        setIsAdmin(savedData.isAdmin);
-        setIsLoggedIn(true); // 저장된 로그인 데이터가 있으면 로그인 상태로 설정
-        setMajor(savedData.major);
-        console.log('로그인 성공시 서버로부터의 응답 :', savedData);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleLike = async () => {
     const userInfo = await loadUserInfo();

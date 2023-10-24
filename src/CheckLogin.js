@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
-import { loadUserInfo} from './Common/Common';
-const CheckLogin=({navigation})=>{
-    const [isLoggedIn, setLoggedIn] = useState(false);
-    //컴포넌트 isLoggedIn 상태를 false로 설정, 상태를 설정할 setLoggedIn 함수 생성
+import { Alert,View} from 'react-native';
+import { loadUserInfo } from './Common'; 
 
+const CheckLogin=({navigation})=>{
     useEffect(() => {
         const checkLoginStatus = async () => {
           // AsyncStorage에서 사용자 정보를 가져옵니다.
           const userInfo = await loadUserInfo();
-    
+          
           // 사용자 정보가 있다면 로그인 상태로 간주하여 메인 화면으로 이동합니다.
           if (userInfo) {
-            setLoggedIn(true);
-            navigation.navigate('MainTest');
+            Alert.alert('로그인 되어있습니다');
+            console.log('로그인 정보 확인함');
+            navigation.navigate('CheckIsCert');
+          }else{
+            console.log('로그인 정보 없음');
+            navigation.navigate('LoginScreen');
           }
         };
     

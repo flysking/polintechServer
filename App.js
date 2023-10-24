@@ -2,11 +2,12 @@ import React from 'react';
 import {View, Image, Text, TouchableOpacity} from 'react-native';
 import Loading from './src/Loading';
 import MainTest from './src/MainTest';
-import Main from './src/Main';
-import Login from './src/Login';
+import CheckLogin from './src/CheckLogin';
 import BoardDetail from './src/BoardDetail';
 import LoginScreen from './src/LoginScreen';
 import Sign from './src/Sign';
+import CheckIsCert from './src/CheckIsCert';
+import Certificate from './src/Certificate';
 import TabBottomMain from "./src/TabBottomMain";
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -21,10 +22,16 @@ function App(){
         
         <NavigationContainer>
             <RootStack.Navigator>
-            <RootStack.Screen name="Loading" component={Loading} 
+                <RootStack.Screen name="Loading" component={Loading} 
                 options={{headerShown:false}}/>
+                <RootStack.Screen name="CheckLogin" component={CheckLogin}
+                options={{headerShown:false}} />
                 <RootStack.Screen name="LoginScreen" component={LoginScreen}
                 options={{headerShown:false}} />
+                <RootStack.Screen name="CheckIsCert" component={CheckIsCert}
+                options={{headerShown:false}} />
+                <RootStack.Screen name="Certificate" component={Certificate} 
+                options={{headerShown:false}}/>
                 <RootStack.Screen name="Sign" component={Sign} 
                 options={{headerShown:false}}/>
                 <RootStack.Screen name="MainTest" component={MainTest} 
@@ -49,11 +56,11 @@ function App(){
                 }}
                 />
 
-                {/*
+                
                 <RootStack.Screen name="BoardDetail" component={BoardDetail}
                 options={{title:"게시글 상세보기"}}
                 />
-                 */}
+                
                 <RootStack.Screen name="TabBottomMain" component={TabBottomMain}
                 options={{title:"게시판"}}
                 />

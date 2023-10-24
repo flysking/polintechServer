@@ -7,9 +7,8 @@ const Loading=({ navigation })=>{
     useEffect(() => {
         // 일정 시간이 지난 후에 메인 화면으로 이동하기 위한 타이머 설정
         const timer = setTimeout(() => {
-          // 예: 3초 후에 'MainScreen'으로 이동
-          navigation.navigate('LoginScreen');
-        }, 3000); // 3초 대기 (원하는 시간으로 조정)
+          navigation.navigate('CheckLogin');
+        }, 2000); // 2초 대기 (원하는 시간으로 조정)
     
         // 컴포넌트가 언마운트될 때 타이머 제거
         return () => clearTimeout(timer);
