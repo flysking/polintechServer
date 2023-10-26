@@ -11,7 +11,6 @@ const LoginScreen = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(()=>{
-
     if(!isLoggedIn){
       const timer = setTimeout(() => {
         Alert.alert("로그인이 필요합니다.");
@@ -87,12 +86,11 @@ const LoginScreen = ({navigation}) => {
         };
         console.log('유저정보확인:',userInfo),
         await saveLoginInfo(userInfo);
-
-        navigation.navigate('CheckIsCert');
-
       } else {
         Alert.alert('로그인에 실패하였습니다.\n아이디 또는 비밀번호를 확인해주세요.');
+        return;
       }
+      navigation.navigate('CheckIsCert');
     } catch (error) {
       console.error(error);
     }

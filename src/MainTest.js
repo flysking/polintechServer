@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, TouchableOpacity,StyleSheet} from 'react-native';
+import {KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function MainTest ({navigation}) {
@@ -49,7 +49,7 @@ function MainTest ({navigation}) {
                         keyExtractor={item => item.board_id.toString()}
                         renderItem={({item}) => (
                     <View style={styles.list}>
-                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { board_id: item.board_id })} style={{flexDirection:'row'}}>
+                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { boardId: item.board_id })} style={{flexDirection:'row'}}>
                                 <Text style={{color:'black'}}>{item.board_title}</Text>
                                 <Text style={{color:'black',marginLeft:5}}>[{item.board_hits}]</Text>
                         </TouchableOpacity>

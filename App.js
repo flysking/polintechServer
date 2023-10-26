@@ -11,11 +11,8 @@ import Certificate from './src/Certificate';
 import TabBottomMain from "./src/TabBottomMain";
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 
 const RootStack = createNativeStackNavigator();
-const BottomStack=createNativeStackNavigator();
 
 function App(){
     return(

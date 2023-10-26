@@ -42,7 +42,7 @@ function TabHome({navigation}){
         keyExtractor={item => item.board_id.toString()}
         renderItem={({item}) => (
         <View style={styles.list}>
-        <TouchableOpacity  onPress={() => navigation.navigate('BoardDetail', { board_id: item.board_id })}>
+        <TouchableOpacity  onPress={() => navigation.navigate('BoardDetail', { boardId: item.board_id })}>
             <View styles={{flexDirection:'row'}}>
                 <Text style={{color:'black', fontSize:20}}>{item.board_title} [{item.board_hits}]</Text>
             </View>
