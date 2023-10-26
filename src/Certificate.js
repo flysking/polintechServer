@@ -65,7 +65,7 @@ const Certificate=({navigation})=>{
               if(json.success){
                 console.log('db 삽입 완료');
                 console.log('유저:',id);
-                navigation.navigate('UpdateCert',{member_id:id});
+                navigation.navigate('UpdateCert',{id:id});
               }else{
                 console.log('데이터베이스 업로드 실패..');
                 return;
