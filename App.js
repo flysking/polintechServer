@@ -6,6 +6,7 @@ import CheckLogin from './src/CheckLogin';
 import BoardDetail from './src/BoardDetail';
 import LoginScreen from './src/LoginScreen';
 import Sign from './src/Sign';
+import UpdateCert from './src/UpdateCert';
 import CheckIsCert from './src/CheckIsCert';
 import Certificate from './src/Certificate';
 import TabBottomMain from "./src/TabBottomMain";
@@ -28,6 +29,8 @@ function App(){
                 <RootStack.Screen name="CheckIsCert" component={CheckIsCert}
                 options={{headerShown:false}} />
                 <RootStack.Screen name="Certificate" component={Certificate} 
+                options={{headerShown:false}}/>
+                <RootStack.Screen name="UpdateCert" component={UpdateCert} 
                 options={{headerShown:false}}/>
                 <RootStack.Screen name="Sign" component={Sign} 
                 options={{headerShown:false}}/>

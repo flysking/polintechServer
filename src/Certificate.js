@@ -39,7 +39,7 @@ const Certificate=({navigation})=>{
       console.log(formData);
       console.log(formData.image)
       try{
-        const res=await fetch('http://10.0.2.2:3000/UploadCertificate',{
+        const res=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadCertificate',{
           method:'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -49,29 +49,36 @@ const Certificate=({navigation})=>{
         if(res.ok){
           try{
             const data={
-              member_id:userInfo.id,
+              member_id:id,
               image_category:'재학생인증',
               image_name:response?.assets[0]?.fileName,
             }
-            const toDB=await fetch('http://10.0.2.2:3000/UploadToDB',{
+            const toDB=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadToDB',{
               method:'POST',
               headers:{
                 'Content-Type':'application/json',
               },
               body:JSON.stringify(data),
             });
-            const json=await toDB.json();
-            if(json.success){
-              console.log('데이터베이스에 업로드됨.');
-            }else{
-              console.log('데이터베이스 업로드 실패..');
+            try{
+              const json=await toDB.json();
+              if(json.success){
+                console.log('db 삽입 완료');
+                console.log('유저:',id);
+                navigation.navigate('UpdateCert',{member_id:id});
+              }else{
+                console.log('데이터베이스 업로드 실패..');
+                return;
+              }
+            }catch(error){
+              console.log(error,'db 업로드 중 오류');
               return;
             }
           }catch(error){
-            console.log('db액세스 중 오류발생함');
+            console.log(error,'db액세스 중 오류발생함');
           }
           Alert.alert('재학생 인증 신청 완료');
-          navigation.navigate('WaitCert');
+          navigation.navigate('CheckIsCert');
         }else{
           console.log('업로드 실패ㅠㅠ');
         }

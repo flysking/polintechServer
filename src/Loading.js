@@ -23,7 +23,6 @@ const Loading=({ navigation })=>{
                 resizeMode={FastImage.resizeMode.contain}
             />
         </SafeAreaView>
-
     );
 };
 const styles=StyleSheet.create({
