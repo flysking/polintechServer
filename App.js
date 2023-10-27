@@ -10,6 +10,8 @@ import UpdateCert from './src/UpdateCert';
 import CheckIsCert from './src/CheckIsCert';
 import Certificate from './src/Certificate';
 import TabBottomMain from "./src/TabBottomMain";
+//import DrawerMain from './src/DrawerMain';
+import ImageTest from './src/ImageTest';
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -47,7 +49,7 @@ function App(){
                         <View>
                             <TouchableOpacity>
                             <Image
-                            source={require('./image/profile.gif')}
+                        source={require('./image/profile.gif')}
                             style={{ width:35, height:35}}
                             />
                             </TouchableOpacity>
@@ -55,7 +57,9 @@ function App(){
                     )
                 }}
                 />
-
+                <RootStack.Screen name="ImageTest" component={ImageTest}
+                options={{title:"이미지 테스트용 코드입니당"}}
+                /> 
                 
                 <RootStack.Screen name="BoardDetail" component={BoardDetail}
                 options={{title:"게시글 상세보기"}}
