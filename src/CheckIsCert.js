@@ -12,7 +12,7 @@ const CheckIsCert = ({navigation}) =>{
             if(iscert===1){
                 console.log('인증 대기중인 유저');
                 Alert.alert('인증 대기 상태입니다.');
-                navigation.navigate('ImageTest');
+                navigation.navigate('MainTest');
                 return;
             }else if(iscert===2){
                 console.log('재학생 인증 완료된 유저',userInfo.name);

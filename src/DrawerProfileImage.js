@@ -4,7 +4,7 @@ import {View,Text,Image,StyleSheet} from "react-native";
 const DrawerProfileImage=()=>{
     return(
         <View style={styles.circle}>
-            
+            <Text>안녕</Text>
         </View>
     );
 }

@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet} from 'react-native';
+import React, {useState, useEffect,useLayoutEffect} from 'react';
+import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 function MainTest ({navigation}) {
 
     const [boards, setBoards] = useState([]);
-
+    const [modalVisible,setModalVisible]=useState(false);
     useEffect(() => {
         const fetchBoards = async () => {
         try {
@@ -21,10 +20,44 @@ function MainTest ({navigation}) {
 
         fetchBoards();
     }, []); 
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: 'Polintech',
+            headerBackVisible: false,
+            headerStyle: {
+                backgroundColor: '#003497',
+            },
+            headerTitleStyle: {
+                fontWeight: 'bold',
+                color: 'white',
+            },
+            headerRight: () => (
+                <View>
+                    <TouchableOpacity onPress={()=>setModalVisible(true)}>
+                        <Image
+                            source={require('../image/profile.gif')}
+                            style={{ width: 35, height: 35 }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            ),
+        });
+    }, [navigation]);
+
+    
     const handleBoardList=()=>{
         navigation.navigate('TabBottomMain');
     };
     const top5Board = boards.slice(0,5);
+
+    const drawerModal=(
+        <View style={styles.overlayBox}>
+            <TouchableOpacity>
+                <Text>안녕</Text>
+            </TouchableOpacity>
+        </View>
+    );
 
     return(
         <SafeAreaView style={styles.container}>
@@ -61,6 +94,16 @@ function MainTest ({navigation}) {
                     <Text style={{color:'gray', marginLeft:190}}>더보기</Text>
                 </TouchableOpacity>
             </View>
+            {modalVisible && ( //드로어 네비게이터
+            <View style={styles.drawerBackground}>
+            <Pressable style={styles.overlayBackground}
+            onPress={()=>setModalVisible(false)}>
+                <View>
+                    {drawerModal}
+                </View>
+            </Pressable>
+            </View>
+            )}
         </SafeAreaView>
     ); 
 };
@@ -109,5 +152,35 @@ const styles=StyleSheet.create({
         borderBottomColor:'#D8D8D8',
         borderBottomWidth:1,
     },
+    drawerBackground:{
+        position:'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: Dimensions.get('window').width, // 화면 너비
+        height: Dimensions.get('window').height,    
+
+    },
+    overlayBackground: {
+        width: Dimensions.get('window').width, // 화면 너비
+        height: Dimensions.get('window').height,
+        position: 'absolute',
+        marginTop:-24,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)', // 어두운 배경
+      },
+      overlayBox: {
+        position:'absolute',
+        width: 256,
+        height: Dimensions.get('window').height,
+        right:0,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        //alignItems: 'center',
+      },
 });
 export default MainTest;

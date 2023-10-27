@@ -1,0 +1,55 @@
+import React, {useState, useEffect,useLayoutEffect} from 'react';
+import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+function DrawerModal ({navigation}) {
+    const drawerModal=(
+        <View style={styles.overlayBox}>
+            <TouchableOpacity>
+                <Text>안녕</Text>
+            </TouchableOpacity>
+        </View>
+    );
+    return(
+            <View style={styles.drawerBackground}>
+            <Pressable style={styles.overlayBackground}
+            onPress={()=>setModalVisible(false)}>
+                <View>
+                    {drawerModal}
+                </View>
+            </Pressable>
+            </View>
+    );
+};
+const styles=StyleSheet.create({
+    drawerBackground:{
+        position:'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: Dimensions.get('window').width, // 화면 너비
+        height: Dimensions.get('window').height,    
+    },
+    overlayBackground: {
+        width: Dimensions.get('window').width, // 화면 너비
+        height: Dimensions.get('window').height,
+        position: 'absolute',
+        marginTop:-24,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)', // 어두운 배경
+      },
+      overlayBox: {
+        position:'absolute',
+        width: 256,
+        height: Dimensions.get('window').height,
+        right:0,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        //alignItems: 'center',
+      },
+});
+export default DrawerModal;
