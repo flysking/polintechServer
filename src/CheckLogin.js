@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Alert,View} from 'react-native';
-import { loadUserInfo } from './Common'; 
+import { loadUserInfoAll } from './Common'; 
 
 const CheckLogin=({navigation})=>{
     useEffect(() => {
         const checkLoginStatus = async () => {
           // AsyncStorage에서 사용자 정보를 가져옵니다.
-          const userInfo = await loadUserInfo();
+          const userInfo = await loadUserInfoAll();
+          console.log('로그인체크 유저정보확인:',userInfo);
           // 사용자 정보가 있다면 로그인 상태로 간주하여 메인 화면으로 이동합니다.
           if (userInfo) {
             Alert.alert('로그인 되어있습니다');
             console.log('로그인 정보 확인함');
-            console.log(userInfo.iscert);
-            navigation.navigate('CheckIsCert',{iscert:userInfo.iscert});
+            console.log('유저 정보 확인',userInfo);
+            navigation.navigate('CheckIsCert',{userInfo});
           }else{
             console.log('로그인 정보 없음');
             navigation.navigate('LoginScreen');

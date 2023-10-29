@@ -1,25 +1,52 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
 import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-function MainTest ({navigation}) {
-
+import DrawerModal from './DrawerModal';
+function MainTest ({navigation,route}) {
+    const {userInfo}=route.params;
+    console.log(userInfo.id);
     const [boards, setBoards] = useState([]);
+    const [category,setCategory]=useState('전체');
     const [modalVisible,setModalVisible]=useState(false);
     useEffect(() => {
         const fetchBoards = async () => {
-        try {
-            const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
-            const json = await response.json();
-            if (json.success) {
-            setBoards(json.boards);
+        if(category==='전체'){
+            console.log('전체 게시글 불러오기');
+            try {
+                const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
+                const json = await response.json();
+                if (json.success) {
+                setBoards(json.boards);
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
+        }else if(category==='학과'){
+            console.log('학과 카테고리 선택함');
+            try {
+                const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
+                const json = await response.json();
+                if (json.success) {
+                setBoards(json.boards);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }else if(category==='공지'){
+            console.log('공지 카테고리 선택함');
+            try {
+                const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
+                const json = await response.json();
+                if (json.success) {
+                setBoards(json.boards);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
-        };
-
+        }; 
         fetchBoards();
-    }, []); 
+    }, [category]); 
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -51,26 +78,18 @@ function MainTest ({navigation}) {
     };
     const top5Board = boards.slice(0,5);
 
-    const drawerModal=(
-        <View style={styles.overlayBox}>
-            <TouchableOpacity>
-                <Text>안녕</Text>
-            </TouchableOpacity>
-        </View>
-    );
-
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.topMenu}>
-                <TouchableOpacity onPress={handleBoardList}
+                <TouchableOpacity onPress={()=>setCategory('전체')}
                 style={styles.category}
                 >
                     <Text>전체</Text>
                 </TouchableOpacity >
-                <TouchableOpacity onPress={handleBoardList}>
+                <TouchableOpacity onPress={()=>setCategory('학과')}>
                     <Text>학과</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleBoardList}>
+                <TouchableOpacity onPress={()=>setCategory('공지')}>
                     <Text>공지</Text>
                 </TouchableOpacity>
             </View>
@@ -99,7 +118,7 @@ function MainTest ({navigation}) {
             <Pressable style={styles.overlayBackground}
             onPress={()=>setModalVisible(false)}>
                 <View>
-                    {drawerModal}
+                    <DrawerModal />
                 </View>
             </Pressable>
             </View>

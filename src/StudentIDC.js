@@ -3,8 +3,7 @@ import {Alert,TouchableOpacity,Dimensions,Image,TextInput,Pressable,Platform,Saf
 import { saveLoginInfo, loadUserInfo, logOut } from './Common';
 import {launchImageLibrary} from 'react-native-image-picker';
 
-
-const Certificate=({navigation,route})=>{
+const StudentIDC=({navigation,route})=>{
     const {userInfo}=route.params;
     const [id,setId]=useState(userInfo.id);
     const [name, setName]=useState(userInfo.name);
@@ -88,11 +87,6 @@ const Certificate=({navigation,route})=>{
         return;
       }
     };
-    const btnLogout= async ()=>{
-        await logOut();
-        console.log('로그아웃 눌렀어용');
-        navigation.navigate('LoginScreen');
-    }
     const overlayBox = (
       <View style={styles.overlayBox}>
         <Text style={styles.overlayTitle}>
@@ -114,7 +108,7 @@ const Certificate=({navigation,route})=>{
       //재학증명서에 있는 정보중 학과(세부전공제외) 학번, 이름만 담기로 결정합니다.
         <SafeAreaView style={styles.block}>
           <View>
-            <Text style={styles.title}>재학생 인증 신청</Text>
+            <Text style={styles.title}>모바일 학생증</Text>
           </View>
           <Pressable onPress={onSelectImage}>
             <Image 
@@ -240,4 +234,4 @@ const styles=StyleSheet.create({
   },
 })
 
-export default Certificate;
+export default StudentIDC;

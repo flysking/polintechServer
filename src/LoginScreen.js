@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Alert,View, TextInput, TouchableOpacity, StyleSheet, Text, Image, Keyboard } from 'react-native';
-import { saveLoginInfo, loadUserInfo, logOut } from './Common';
+import { saveUserInfoAll, loadUserInfo, logOut, loadUserInfoAll } from './Common';
 
 const LoginScreen = ({navigation}) => {
   const [id, setId] = useState('');
@@ -22,7 +22,7 @@ const LoginScreen = ({navigation}) => {
   useEffect(() => {
     // AsyncStorage에서 사용자 정보를 불러와 로그인 상태를 판단합니다.
     const checkLoginStatus = async () => {
-      const userInfo = await loadUserInfo();
+      const userInfo = await loadUserInfoAll();
       if (userInfo) {
         setNickname(userInfo.nickname);
         setName(userInfo.name);
@@ -77,20 +77,19 @@ const LoginScreen = ({navigation}) => {
           email: json.member.email,
           major:json.member.majorname,
           birth:json.member.birth,
-          number:json.member.number,
           gender:json.member.gender,
           iscert:json.member.iscert,
           isAdmin:json.member.isAdmin,
           grade:json.member.grade,
-          majorname:json.member.majorname,
         };
         console.log('유저정보확인:',userInfo),
-        await saveLoginInfo(userInfo);
+        await saveUserInfoAll(userInfo);
       } else {
         Alert.alert('로그인에 실패하였습니다.\n아이디 또는 비밀번호를 확인해주세요.');
         return;
       }
-      navigation.navigate('CheckIsCert');
+      const userInfo=await loadUserInfoAll();
+      navigation.navigate('CheckIsCert',{userInfo});
     } catch (error) {
       console.error(error);
     }
