@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import {Alert,TouchableOpacity,Dimensions,Image,TextInput,Pressable,Platform,SafeAreaView,Text, StyleSheet,Button,View} from 'react-native';
-import { saveLoginInfo, loadUserInfo, logOut } from './Common';
+import { saveLoginInfo, updatingIsCert,loadUserInfo, logOut, loadUserInfoAll } from './Common';
 const UpdateCert=({navigation,route})=>{
 
    const {id, userInfo}=route.params;
@@ -24,8 +24,9 @@ const UpdateCert=({navigation,route})=>{
               const resData=await res.json();
               if(resData.success){
                 console.log('정상적으로 처리됨.',resData);
-                setUserCert(1);
-                navigation.navigate('CheckIsCert',{ userInfo: { ...userInfo, iscert: 1 }});
+                await updatingIsCert(1);
+                const userInfo=await loadUserInfoAll();
+                navigation.navigate('CheckIsCert',{ userInfo: userInfo});
               }else{
                 console.error('서버 응답 오류:',resData);
                 return;

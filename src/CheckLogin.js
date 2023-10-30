@@ -13,7 +13,7 @@ const CheckLogin=({navigation})=>{
             Alert.alert('로그인 되어있습니다');
             console.log('로그인 정보 확인함');
             console.log('유저 정보 확인',userInfo);
-            navigation.navigate('CheckIsCert',{userInfo});
+            navigation.navigate('CheckIsCert',{userInfo:userInfo});
           }else{
             console.log('로그인 정보 없음');
             navigation.navigate('LoginScreen');

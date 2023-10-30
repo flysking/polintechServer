@@ -38,7 +38,7 @@ function App(){
                 <RootStack.Screen name="Sign" component={Sign} 
                 options={{headerShown:false}}/>
                 <RootStack.Screen name="StudentIDC" component={StudentIDC}
-                />
+                options={{title:"학생증"}}/>
                 <RootStack.Screen name="MainTest" component={MainTest} 
                 />
                 <RootStack.Screen name="BoardDetail" component={BoardDetail}

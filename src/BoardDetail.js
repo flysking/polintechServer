@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {
+  Image,
   View,
   Text,
   Button,
@@ -12,6 +13,7 @@ import {
 } from 'react-native';
 import {saveLoginInfo, loadUserInfoAll, logOut} from './Common';
 const BoardDetail = ({route, navigation}) => {
+  const apiUrl = 'https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app';
   const [board, setBoard] = useState(null);
   const [id, setId] = useState('');
   const [boardMid, setBoardMid] = useState('');
@@ -30,131 +32,150 @@ const BoardDetail = ({route, navigation}) => {
   const [response, setResponse] = useState(null); //이미지 출력 테스트 변수
   const [isImage, setIsImage] = useState(false); //게시글에 이미지 존재 여부
   const [imageName, setImageName] = useState(''); //게시글에 이미지 이름
-  useEffect(() => {
-    // 이미지 확인
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/ImageCheck/${boardId}`)
-      .then(response => response.json())
-      .then(imageData => {
-        if (imageData.success) {
-          if (imageData == null) {
-            console.log('이 게시글은 이미지를 가지고 있지 않습니다.');
-            return;
-          } else {
-            console.log('이미지 데이터 : ', imageData.imageData);
-            console.log('이미지 데이터 : ', imageData.imageData.image_bid);
-            console.log('이미지 fileName : ', imageData.imageData.image_name);
-            setImageName(imageData.imageData.image_name);
-          }
+  
+  //BoardDetail 최적화중
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       // 1. 이미지 확인
+  //       const imageResponse = await fetch(`${apiUrl}/ImageCheck/${boardId}`);
+  //       const imageJson = await imageResponse.json();
+  //       // Handle image data...
+        
+  //       // 2. 조회수 증가
+  //       await fetch(`${apiUrl}/BoardHitsUpdate/${boardId}`);
+        
+  //       // 3. 상세보기 불러오기
+  //       const boardResponse = await fetch(`${apiUrl}/BoardDetail/${boardId}`);
+  //       const boardData = await boardResponse.json();
+  //       // Handle board data...
+  
+  //       // 4. 댓글 조회
+  //       const commentsResponse = await fetch(`${apiUrl}/CommentList/${boardId}`);
+  //       const commentsData = await commentsResponse.json();
+  //       // Handle comments...
+  
+  //       // 5. 답글 조회
+  //       const replysResponse = await fetch(`${apiUrl}/ReplyList/${boardId}`);
+  //       const replysData = await replysResponse.json();
+  //       // Handle replys...
+  //     } catch (error) {
+  //       console.error('오류 발생:', error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, [boardId, isImage, trigger]);
+  //BoardDetail 최적화
 
+  const onSelectImage = () => {
+    //이미지 출력 테스트 함수
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        maxWidth: 512,
+        maxHeight: 512,
+        includeBase64: Platform.OS === 'android',
+      },
+      res => {
+        // console.log(res);
+        if (res.didCancel) {
+          return;
+        }
+        setResponse(res);
+      },
+    );
+  };
+
+  useEffect(() => {
+    //조회수 증가 불러오기
+    fetch(`${apiUrl}/BoardHitsUpdate/${boardId}`);
+  }, [boardId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 1. 이미지 확인
+        const imageResponse = await fetch(`${apiUrl}/ImageCheck/${boardId}`);
+        if (!imageResponse.ok) {
+          console.error('이미지 확인 요청 에러:', imageResponse.status);
+        } else {
+          // console.log('이미지 확인');
+          const imageData = await imageResponse.json();
+          // console.log(imageData);
+          // console.log('이미지 파일명', imageData.imageData.image_name);
+
+          // console.log('이미지 파일명', imageName);
           if (imageData.imageData != null) {
             setIsImage(true);
+            setImageName(imageData.imageData.image_name);
             console.log('이미지 여부(true) : ', isImage);
           } else {
             setIsImage(false);
             console.log('이미지 여부(false) : ', isImage);
           }
-        } else {
-          console.log(
-            '서버에서 성공 상태를 받지 못함(BoardDetail_image):',
-            imageData,
-          ); // 서버 오류 처리
-        }
-      })
-      .catch(error => {
-        // console.error('데이터를 가져오는 데 오류가 발생했습니다:', error); // 그 외 오류 처리
-      });
-  }, [isImage, trigger]);
 
-    useEffect(() => {
-    //조회수 증가 불러오기
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardHitsUpdate/${boardId}`);
-  }, [boardId]);
+          // Handle image data...
+        }
 
-  useEffect(() => {
-    //상세보기 불러오기
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardDetail/${boardId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setBoard(data.board);
-          setLikeCount(data.likes);
+        // 2. 상세보기 불러오기
+        const boardResponse = await fetch(`${apiUrl}/BoardDetail/${boardId}`);
+        if (!boardResponse.ok) {
+          console.error('상세보기 요청 에러:', boardResponse.status);
+        } else {
+          // console.log('상세보기 요청 ');
+          const boardData = await boardResponse.json();
+          setBoard(boardData.board);
+          setLikeCount(boardData.likes);
+          // console.log(boardData);
+          // Handle board data...
+        }
 
-          console.log('게시글 좋아요 갯수(BoardDetail) : ', likeCount);
+        // 3. 댓글 조회
+        const commentsResponse = await fetch(
+          `${apiUrl}/CommentList/${boardId}`,
+        );
+        if (!commentsResponse.ok) {
+          console.error('댓글 조회 요청 에러:', commentsResponse.status);
         } else {
-          console.log('서버에서 성공 상태를 받지 못함(BoardDetail):', data); // 서버 오류 처리
+          const commentsData = await commentsResponse.json();
+          setComments(commentsData.comments);
+          // console.log(comments);
+          // Handle comments...
         }
-      })
-      .catch(error => {
-        console.error('데이터를 가져오는 데 오류가 발생했습니다:', error); // 그 외 오류 처리
-      });
-    // 댓글 조회
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/CommentList/${boardId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('댓글 조회 성공');
-          setComments(data.comments);
-          console.log(comments);
+
+        // 4. 답글 조회
+        const replysResponse = await fetch(`${apiUrl}/ReplyList/${boardId}`);
+        if (!replysResponse.ok) {
+          console.error('답글 조회 요청 에러:', replysResponse.status);
         } else {
-          // console.error('댓글을 불러오는데 실패했습니다:', data.error);
+          const replysData = await replysResponse.json();
+          setReplys(replysData.replys);
+          // console.log(replys);
+
+          // Handle replys...
         }
-      })
-      .catch(error => {
-        console.error('댓글을 불러오는 도중 오류가 발생했습니다:', error);
-      });
-    //답글 조회
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/ReplyList/${boardId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('답글 조회 성공');
-          setReplys(data.replys);
-          console.log(replys);
-        } else {
-          console.error('답글 조회 실패:', data.error);
-        }
-      })
-      .catch(error => {
-        console.error('답글 등록 중 오류 발생:', error);
-      });
-  }, [boardId, trigger]);
-  useEffect(() => {
-    //좋아요 변화시 board 데이터 새로고침
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardDetailUpdate/${boardId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setBoard(data.board);
-          setLikeCount(data.likes);
-          console.log('게시글 좋아요 갯수(BoardDetailUpdate) : ', likeCount);
-        } else {
-          console.log(
-            '서버에서 성공 상태를 받지 못함(BoardDetailUpdate):',
-            data,
-          ); // 서버 오류 처리
-        }
-      })
-      .catch(error => {
-        console.log(
-          '데이터를 가져오는 데 오류가 발생했습니다(BoardDetailUpdate):',
-          error,
-        ); // 그 외 오류 처리
-      });
-  }, [trigger]); //likeTrigger의 값이 변화하였으때 실행됨
+      } catch (error) {
+        console.error('오류 발생:', error);
+      }
+    };
+
+    fetchData();
+  }, [boardId, isImage, trigger]); // 여기에서 'apiUrl'도 의존성 배열에 포함되어 있습니다. 만약 상위 스코프에서 이미 정의되어 있다면 제거해주세요.
 
   useEffect(() => {
     //userinfo 불러오기
     const fetchData = async () => {
-      const userInfo = await loadUserInfoAll(); //Common폴더에 있는 userinfo
+      const savedData = await loadUserInfoAll(); //Common폴더에 있는 userinfo
 
-      if (userInfo) {
-        setId(userInfo.id);
-        setNickname(userInfo.nickname);
-        setName(userInfo.name);
-        setIsAdmin(userInfo.isadmin);
+      if (savedData) {
+        setId(savedData.id);
+        setNickname(savedData.nickname);
+        setName(savedData.name);
+        setIsAdmin(savedData.isadmin);
         setIsLoggedIn(true); // 저장된 로그인 데이터가 있으면 로그인 상태로 설정
-        setMajor(userInfo.major);
-        console.log('로그인 성공시 서버로부터의 응답 :', userInfo);
+        setMajor(savedData.major);
+        // console.log('로그인 성공시 서버로부터의 응답 :', savedData);
       }
     };
 
@@ -163,15 +184,15 @@ const BoardDetail = ({route, navigation}) => {
 
   const handleLike = async () => {
     //좋아요 추가 프로세스
-    const userInfo = await loadUserInfoAll(); //userInfo 불러오기
+    const userInfo = await loadUserInfo(); //userInfo 불러오기
     const memberId = userInfo?.id;
 
     if (!memberId) {
-      console.log('memberId를 불러오지 못함');
+      // console.log('memberId를 불러오지 못함');
       return;
     }
 
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/LikePlus`, {
+    fetch(`${apiUrl}/LikePlus`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,15 +204,14 @@ const BoardDetail = ({route, navigation}) => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('서버 응답:', data);
         if (data.success) {
-          console.log('게시글 좋아요 갯수(LikePlus) : ', data.likes);
+          // console.log('게시글 좋아요 갯수(LikePlus) : ', data.likes);
           setLikeCount(data.likes); // 서버에서 반환된 좋아요 갯수로 업데이트
           setTrigger(prev => !prev); //좋아요 값이 변화한다는걸 알림
         }
       })
       .catch(error => {
-        console.log('좋아요 처리 중 오류 발생(LikePlus):', error);
+        // console.log('좋아요 처리 중 오류 발생(LikePlus):', error);
       });
   };
 
@@ -215,31 +235,28 @@ const BoardDetail = ({route, navigation}) => {
   const handleDelete = async () => {
     //게시글 삭제
     try {
-      const response = await fetch(
-        `https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/DeleteBoard/${boardId}`,
-        {
-          method: 'DELETE', // DELETE 메서드 사용
-        },
-      );
+      const response = await fetch(`${apiUrl}/DeleteBoard/${boardId}`, {
+        method: 'DELETE', // DELETE 메서드 사용
+      });
       const data = await response.json();
       if (data.success) {
-        console.log('게시글 삭제 성공');
+        // console.log('게시글 삭제 성공');
         navigation.navigate('Login'); // 현재 화면에서 로그인으로 이동
       } else {
-        console.log('게시글 삭제 실패:', data.error);
+        // console.log('게시글 삭제 실패:', data.error);
       }
     } catch (error) {
-      console.log('게시글 삭제 중 오류 발생:', error);
+      // console.log('게시글 삭제 중 오류 발생:', error);
     }
   };
 
   useEffect(() => {
-    console.log('게시글 좋아요 갯수(게시글 출력시) : ', likeCount);
+    // console.log('게시글 좋아요 갯수(게시글 출력시) : ', likeCount);
   }, [likeCount]);
 
   // 댓글 저장 함수
   const handleComment = () => {
-    fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/CommentAdd`, {
+    fetch(`${apiUrl}/CommentAdd`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -253,19 +270,19 @@ const BoardDetail = ({route, navigation}) => {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          console.log('댓글 등록 성공(게시글)');
+          // console.log('댓글 등록 성공(게시글)');
           setComment(''); // 댓글 등록 후 입력 필드 초기화
           setComments(data.comments);
           setTrigger(prev => !prev); //댓글 값이 변화한다는걸 알림
         } else {
-          console.log('댓글 등록 실패(게시글):', data.error);
+          // console.log('댓글 등록 실패(게시글):', data.error);
         }
       })
       .catch(error => {
-        console.log('댓글 등록 중 오류 발생(게시글):', error);
-        console.log(boardId);
-        console.log(id);
-        console.log(comment);
+        // console.log('댓글 등록 중 오류 발생(게시글):', error);
+        // console.log(boardId);
+        // console.log(id);
+        // console.log(comment);
       });
   };
   const onCommentClick = (commentId, comment_mid, comment_content) => {

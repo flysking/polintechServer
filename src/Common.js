@@ -71,15 +71,11 @@ export const loadUserInfoAny = async (any) => {
   }
 };
 
-export const updateUserInfo = async (newInfo) => {
+export const updatingIsCert = async (iscert) => {
   try {
-    const existingInfo = await loadUserInfo(); // 이전 정보 불러오기
-    if (existingInfo) {
-      // 기존 정보가 존재한다면 새 정보와 병합
-      const updatedInfo = { ...existingInfo, ...newInfo };
-      const jsonValue = JSON.stringify(updatedInfo);
-      await AsyncStorage.setItem('@login_info', jsonValue);
-    }
+      const jsonValue = JSON.stringify(iscert);
+      await AsyncStorage.setItem('@member_iscert', jsonValue);
+      console.log('업데이트할 데이터:',jsonValue);
   } catch (e) {
     console.error('사용자 정보 업데이트 중 오류 발생:', e);
   }
@@ -95,9 +91,27 @@ export const loadUserInfo = async () => {
   }
 };
 
-export const logOut = async () => {
+export const logOut = async () => 
+{
+  const keys = Object.keys({
+    id: 'id',
+    pw: 'pw',
+    name: 'name',
+    engname: 'engname',
+    nickname: 'nickname',
+    email: 'email',
+    major: 'major',
+    birth: 'birth',
+    gender: 'gender',
+    iscert: 'iscert',
+    isAdmin: 'isAdmin',
+    grade: 'grade',
+  });
   try {
-    await AsyncStorage.removeItem('@login_info');
+    for (const key of keys) {
+      console.log('삭제할 항목', key);
+      await AsyncStorage.removeItem(`@member_${key}`);
+    }
   } catch (e) {
     console.error('로그인 정보 제거 중 오류 발생', e);
   }

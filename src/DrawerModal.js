@@ -5,14 +5,16 @@ import { loadUserInfoAll,logOut } from './Common';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 function DrawerModal () {
+    const [userInfo, setUserInfo]=useState({});
     const navigation=useNavigation();
     const [name,setName]=useState(null);
     useEffect(()=>{
         const checkUserInfo=async()=>{
-            const userInfo=await loadUserInfoAll();
-            if(userInfo){
-                console.log(userInfo);
-                setName(userInfo.name);
+            const userData=await loadUserInfoAll();
+            if(userData){
+                console.log(userData);
+                setUserInfo(userData);
+                setName(userData.name);
             }
         };
         checkUserInfo();
@@ -24,7 +26,7 @@ function DrawerModal () {
     };
     const handleIdc=()=>{
         console.log(name,'님 학생증으로 이동');
-        navigation.navigate('StudentIDC',{userInfo});
+        navigation.navigate('StudentIDC',{userInfo:userInfo});
     }
 
     return(
@@ -84,12 +86,13 @@ const styles=StyleSheet.create({
       profileBox:{
         marginTop:50,
         alignItems:'center',
+        borderBottomWidth:1,
       },
       profileImg:{
         borderColor:'#000000',
         borderWidth:1,
-        width:150,
-        height:150,
+        width:125,
+        height:125,
       },
       mypageBox:{
         marginTop:40,

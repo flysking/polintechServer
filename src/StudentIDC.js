@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react';
-import {Alert,TouchableOpacity,Dimensions,Image,TextInput,Pressable,Platform,SafeAreaView,Text, StyleSheet,Button,View} from 'react-native';
-import { saveLoginInfo, loadUserInfo, logOut } from './Common';
+import {ScrollView,Alert,TouchableOpacity,Dimensions,Image,TextInput,Pressable,Platform,SafeAreaView,Text, StyleSheet,Button,View} from 'react-native';
+import  {saveLoginInfo, loadUserInfo, logOut } from './Common';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 const StudentIDC=({navigation,route})=>{
@@ -9,6 +9,29 @@ const StudentIDC=({navigation,route})=>{
     const [name, setName]=useState(userInfo.name);
     const [response,setResponse]=useState(null);
     const [showOverlay, setShowOverlay] = useState(false); // 추가
+    const [idcInfo,setIdcInfo]=useState([]);
+    const [haveIdc,setHaveIdc]=useState(false);
+
+    useEffect(()=>{
+      const getIdc=async()=>{
+        const member_id=id;
+        console.log(member_id,'님 학생증 조회');
+        try{
+            const res=await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/SearchIdc/${member_id}`);
+            const data=await res.json();
+            if (data.success){
+              console.log('res 찾았음',data.idc);
+              setIdcInfo(data.idc);
+            }else if(data.error){
+              console.log('res데이터 찾지못함',data);
+            }
+        }catch(error){
+          console.error('학생증 조회 중 오류 발생',error);
+          return;
+        }
+      };
+      getIdc();
+    },[haveIdc]);
 
     const onSelectImage=()=>{
       launchImageLibrary({
@@ -90,14 +113,12 @@ const StudentIDC=({navigation,route})=>{
     const overlayBox = (
       <View style={styles.overlayBox}>
         <Text style={styles.overlayTitle}>
-          재학생 인증이란?
+          학생증 이미지 양식
         </Text>
         <Text style={styles.overlayText}>
-            폴인텍의 회원으로 활동하기 위해서는 반드시 재학생 인증이 필요합니다.{'\n'}{'\n'}
-            재학증명서를 출력해 촬영하거나 학생정보시스템 접속 후 학생정보란을 캡쳐바랍니다.{'\n'}{'\n'}
-            필수정보를 제외한 정보는 블라인드 처리가 필요합니다.
+            학생증에 사용될 이미지는 3:4 비율로 자동 조정됩니다.{'\n'}
+            단정한 복장 착용 후 촬영 바랍니다.
             {'\n'}{'\n'}
-            필수 정보 : 이름, 학과, 학번{'\n'}{'\n'}
             문의 사항은 카카오톡 채널 @polintech 로 접수 바랍니다.
             {'\n'}
         </Text>
@@ -106,6 +127,7 @@ const StudentIDC=({navigation,route})=>{
 
     return(
       //재학증명서에 있는 정보중 학과(세부전공제외) 학번, 이름만 담기로 결정합니다.
+        <ScrollView style={styles.scroll}>
         <SafeAreaView style={styles.block}>
           <View>
             <Text style={styles.title}>모바일 학생증</Text>
@@ -132,7 +154,7 @@ const StudentIDC=({navigation,route})=>{
               value={name}
               />
             <Pressable onPress={()=>setShowOverlay(true)}>
-              <Text style={styles.text1}>재학생 인증이 무엇인가요?</Text>
+              <Text style={styles.text1}>학생증 신청 양식</Text>
             </Pressable>
           </View>
           <TouchableOpacity style={styles.certButton} onPress={handleCertificate}>
@@ -147,13 +169,18 @@ const StudentIDC=({navigation,route})=>{
         </Pressable>
       )}
       </SafeAreaView>
+      </ScrollView>
     );
 };
 const styles=StyleSheet.create({
   title:{
-    marginTop:50,
     fontSize:30,
     color:'#000000',
+  },
+  scroll:{
+    display:'flex',
+    width:'100%',
+    height:'100%',
   },
   block:{
     alignItems:'center',
@@ -166,7 +193,7 @@ const styles=StyleSheet.create({
     backgroundColor:'#cdcdcd',
     borderRadius:10,
     width:256,
-    height:256,
+    height:342,
   },
   form:{
     marginTop:16,
