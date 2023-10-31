@@ -184,7 +184,7 @@ const BoardDetail = ({route, navigation}) => {
 
   const handleLike = async () => {
     //좋아요 추가 프로세스
-    const userInfo = await loadUserInfo(); //userInfo 불러오기
+    const userInfo = await loadUserInfoAll(); //userInfo 불러오기
     const memberId = userInfo?.id;
 
     if (!memberId) {
@@ -241,7 +241,7 @@ const BoardDetail = ({route, navigation}) => {
       const data = await response.json();
       if (data.success) {
         // console.log('게시글 삭제 성공');
-        navigation.navigate('Login'); // 현재 화면에서 로그인으로 이동
+        navigation.pop(); // 현재 화면에서 로그인으로 이동
       } else {
         // console.log('게시글 삭제 실패:', data.error);
       }

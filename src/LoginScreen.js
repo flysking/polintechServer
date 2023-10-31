@@ -7,11 +7,15 @@ const LoginScreen = ({navigation}) => {
   const [pw, setPw] = useState('');
   const [nickname, setNickname] = useState('');
   const [name, setName] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState('0');
   const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState('');
+  const [foundId, setFoundId] = useState(null);
+  const [emailNotFound, setEmailNotFound] = useState(false);
+
 
   useEffect(()=>{
-    if(!isLoggedIn){
+    if(isLoggedIn=='0'){
       const timer = setTimeout(() => {
         Alert.alert("로그인이 필요합니다.");
       }, 500); 
@@ -23,12 +27,12 @@ const LoginScreen = ({navigation}) => {
     // AsyncStorage에서 사용자 정보를 불러와 로그인 상태를 판단합니다.
     const checkLoginStatus = async () => {
       const userInfo = await loadUserInfoAll();
-      if (userInfo) {
+      if (userInfo.isLogin==='1') {
         setNickname(userInfo.nickname);
         setName(userInfo.name);
-        setIsLoggedIn(true);
+        setIsLoggedIn(userInfo.isLogin);
       }else{
-        
+        setIsLoggedIn(userInfo.isLogin);
       }
     };
     checkLoginStatus();
@@ -41,7 +45,7 @@ const LoginScreen = ({navigation}) => {
     setPw('');
     setNickname('');
     setName('');
-    setIsLoggedIn(false);
+    setIsLoggedIn('0');
     Alert.alert('로그아웃 성공');
   };
   const handleLogin = async () => {
@@ -81,6 +85,7 @@ const LoginScreen = ({navigation}) => {
           iscert:json.member.iscert,
           isAdmin:json.member.isAdmin,
           grade:json.member.grade,
+          isLogin:'1',
         };
         console.log('유저정보확인:',userInfo),
         await saveUserInfoAll(userInfo);
@@ -101,14 +106,13 @@ const LoginScreen = ({navigation}) => {
   };
 
   const handlePasswordRecovery = () => {
-    // Add your password recovery logic here
-    console.log('Password recovery initiated for:');
-    //비밀번호 복구 신청 페이지로 이동합니다.
+    //비밀번호 복구 페이지
+    navigation.navigate('PwRecover');
   };
 
   return (
     <View style={styles.container}>
-      {isLoggedIn ? (
+      {isLoggedIn ==='0' ? (
         <>
           <Text>닉네임: {nickname}</Text>
           <Text>이름: {name}</Text>

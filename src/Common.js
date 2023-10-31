@@ -41,6 +41,7 @@ export const loadUserInfoAll = async () => {
       iscert: 'iscert',
       isAdmin: 'isAdmin',
       grade: 'grade',
+      isLogin:'isLogin'
     });
     const data = {};
     // 각 필드에 대한 AsyncStorage 키를 순회하며 데이터 불러오기
@@ -80,7 +81,15 @@ export const updatingIsCert = async (iscert) => {
     console.error('사용자 정보 업데이트 중 오류 발생:', e);
   }
 };
-
+export const updatingIsLogin = async (isLogin) => {
+  try {
+      const jsonValue = JSON.stringify(isLogin);
+      await AsyncStorage.setItem('@member_isLogin', jsonValue);
+      console.log('업데이트할 데이터:',jsonValue);
+  } catch (e) {
+    console.error('사용자 정보 업데이트 중 오류 발생:', e);
+  }
+};
 export const loadUserInfo = async () => {
   //저장한 user 정보 불러옴
   try {
@@ -106,6 +115,7 @@ export const logOut = async () =>
     iscert: 'iscert',
     isAdmin: 'isAdmin',
     grade: 'grade',
+    isLogin:'isLogin',
   });
   try {
     for (const key of keys) {

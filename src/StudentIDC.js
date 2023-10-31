@@ -10,7 +10,7 @@ const StudentIDC=({navigation,route})=>{
     const [response,setResponse]=useState(null);
     const [showOverlay, setShowOverlay] = useState(false); // 추가
     const [idcInfo,setIdcInfo]=useState([]);
-    const [haveIdc,setHaveIdc]=useState(false);
+    const [haveIdc,setHaveIdc]=useState(null);
 
     useEffect(()=>{
       const getIdc=async()=>{
@@ -22,8 +22,11 @@ const StudentIDC=({navigation,route})=>{
             if (data.success){
               console.log('res 찾았음',data.idc);
               setIdcInfo(data.idc);
+              setHaveIdc(1);
             }else if(data.error){
-              console.log('res데이터 찾지못함',data);
+              console.log('학생증 발급 필요함');
+              Alert.alert('학생증이 없습니다.\n\n학생증을 발급받아주세요!')
+              setHaveIdc(0);
             }
         }catch(error){
           console.error('학생증 조회 중 오류 발생',error);
@@ -31,7 +34,7 @@ const StudentIDC=({navigation,route})=>{
         }
       };
       getIdc();
-    },[haveIdc]);
+    },[]);
 
     const onSelectImage=()=>{
       launchImageLibrary({
@@ -50,17 +53,18 @@ const StudentIDC=({navigation,route})=>{
       );
     };
 
-    const handleCertificate=async()=>{
+    const handleIdc=async()=>{
       const formData=new FormData();
       formData.append('image',{
         uri:response?.assets[0]?.uri,
         type:response?.assets[0]?.type,
         name:response?.assets[0]?.fileName,
       });
+      formData.append('member_id',id);
       console.log(formData);
       console.log(formData.image);
       try{
-        const res=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadCertificate',{
+        const res=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadIdcImage',{
           method:'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -71,7 +75,7 @@ const StudentIDC=({navigation,route})=>{
           try{
             const data={
               member_id:id,
-              image_category:'재학생인증',
+              image_category:'학생증',
               image_name:response?.assets[0]?.fileName,
             }
             const toDB=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadToDB',{
@@ -86,7 +90,7 @@ const StudentIDC=({navigation,route})=>{
               if(json.success){
                 console.log('db 삽입 완료');
                 console.log('유저:',id);
-                navigation.navigate('UpdateCert',{id:id,userInfo:userInfo});
+                setHaveIdc(1);
               }else{
                 console.log('데이터베이스 업로드 실패..');
                 return;
@@ -98,8 +102,8 @@ const StudentIDC=({navigation,route})=>{
           }catch(error){
             console.log(error,'db액세스 중 오류발생함');
           }
-          Alert.alert('재학생 인증 신청 완료');
-          navigation.navigate('CheckIsCert',{userInfo});
+          Alert.alert('학생증 신청 완료');
+          set
         }else{
           console.log('업로드 실패ㅠㅠ');
         }
@@ -116,9 +120,12 @@ const StudentIDC=({navigation,route})=>{
           학생증 이미지 양식
         </Text>
         <Text style={styles.overlayText}>
+            학생증으로 사용될 이미지를 선택한 후, 본인의 학과, 이름 정보가 일치한지
+            확인해주세요.{'\n'}{'\n'}
             학생증에 사용될 이미지는 3:4 비율로 자동 조정됩니다.{'\n'}
             단정한 복장 착용 후 촬영 바랍니다.
             {'\n'}{'\n'}
+
             문의 사항은 카카오톡 채널 @polintech 로 접수 바랍니다.
             {'\n'}
         </Text>
@@ -128,47 +135,61 @@ const StudentIDC=({navigation,route})=>{
     return(
       //재학증명서에 있는 정보중 학과(세부전공제외) 학번, 이름만 담기로 결정합니다.
         <ScrollView style={styles.scroll}>
-        <SafeAreaView style={styles.block}>
-          <View>
-            <Text style={styles.title}>모바일 학생증</Text>
-          </View>
-          <Pressable onPress={onSelectImage}>
-            <Image 
-              style={styles.imageArea}
-              source={
-                response?{uri:response?.assets[0]?.uri}:
-                { uri:'https://storage.googleapis.com/polintech_image/AppImage/user.png'}}
-            />
-          </Pressable>
-          <View style={styles.form}>
-            <TextInput 
-              style={styles.input}
-              placeholder='학번을 입력해주세요'
-              onChangeText={setId}
-              value={id}
-            />
-            <TextInput 
-              style={styles.input}
-              placeholder='이름을 입력해주세요'
-              onChangeText={setName}
-              value={name}
+          {haveIdc === 0 ? (
+            <SafeAreaView style={styles.block}>
+            <View>
+              <Text style={styles.title}>모바일 학생증</Text>
+            </View>
+            <Pressable onPress={onSelectImage}>
+              <Image 
+                style={styles.imageArea}
+                source={
+                  response?{uri:response?.assets[0]?.uri}:
+                  { uri:'https://storage.googleapis.com/polintech_image/AppImage/user.png'}}
               />
-            <Pressable onPress={()=>setShowOverlay(true)}>
-              <Text style={styles.text1}>학생증 신청 양식</Text>
             </Pressable>
-          </View>
-          <TouchableOpacity style={styles.certButton} onPress={handleCertificate}>
-            <Text style={styles.certButtonText}>재학생 인증 신청</Text>
-          </TouchableOpacity>
+            <View style={styles.form}>
+              <TextInput 
+                style={styles.input}
+                placeholder='학번을 입력해주세요'
+                onChangeText={setId}
+                value={id}
+              />
+              <TextInput 
+                style={styles.input}
+                placeholder='이름을 입력해주세요'
+                onChangeText={setName}
+                value={name}
+                />
+              <Pressable onPress={()=>setShowOverlay(true)}>
+                <Text style={styles.text1}>학생증 신청 양식</Text>
+              </Pressable>
+            </View>
+            <TouchableOpacity style={styles.certButton} onPress={handleIdc}>
+              <Text style={styles.certButtonText}>재학생 인증 신청</Text>
+            </TouchableOpacity>
 
-        {showOverlay && (
-          <Pressable style={styles.overlayBackground} onPress={()=>{setShowOverlay(false)}}>
-          <View style={styles.centeredBox}>
-            {overlayBox}
-          </View>
-        </Pressable>
-      )}
-      </SafeAreaView>
+          {showOverlay && (
+            <Pressable style={styles.overlayBackground} onPress={()=>{setShowOverlay(false)}}>
+            <View style={styles.centeredBox}>
+              {overlayBox}
+            </View>
+          </Pressable>
+        )}
+        </SafeAreaView>
+          ) : haveIdc === 1 ? (
+            <SafeAreaView style={styles.block}>
+              <Text>
+                학생증 발급 대기 상태
+              </Text>
+            </SafeAreaView>
+          ) : (
+            <SafeAreaView style={styles.block}>
+              <Text>
+                학생증 발급 완료된 유저
+              </Text>
+            </SafeAreaView>
+          )}
       </ScrollView>
     );
 };
@@ -252,6 +273,7 @@ const styles=StyleSheet.create({
     paddingVertical: 8,  //버튼 세로
     paddingHorizontal: 50,  //버튼 가로
     marginTop: 20, 
+    marginBottom:30,
   },
   certButtonText:{
     color: 'white',

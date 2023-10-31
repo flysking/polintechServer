@@ -14,6 +14,12 @@ import ReplyAdd from './src/ReplyAdd';
 import ReplyEdit from './src/ReplyEdit';
 import CommentEdit from './src/CommentEdit';
 import StudentIDC from './src/StudentIDC';
+import IdRecover from './src/IdRecover';
+import PwAuthCode from './src/PwAuthCode';
+import PwEmailAuth from './src/PwEmailAuth';
+import PwRecover from './src/PwRecover';
+import PwUpdate from './src/PwUpdate';
+
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -37,9 +43,20 @@ function App(){
                 options={{headerShown:false}}/>
                 <RootStack.Screen name="Sign" component={Sign} 
                 options={{headerShown:false}}/>
-                <RootStack.Screen name="StudentIDC" component={StudentIDC}
+                <RootStack.Screen name="IdRecover" component={IdRecover} 
+                options={{headerShown:false}}/>
+                <RootStack.Screen name="PwAuthCode" component={PwAuthCode} 
+                options={{headerShown:false}}/>
+                <RootStack.Screen name="PwEmailAuth" component={PwEmailAuth} 
+                options={{headerShown:false}}/>                               
+                <RootStack.Screen name="PwRecover" component={PwRecover}
                 options={{title:"학생증"}}/>
+                <RootStack.Screen name="PwUpdate" component={PwUpdate} 
+                options={{headerShown:false}}/>
                 <RootStack.Screen name="MainTest" component={MainTest} 
+                />
+                <RootStack.Screen name="StudentIDC" component={StudentIDC}
+                options={{headerShown:false}}
                 />
                 <RootStack.Screen name="BoardDetail" component={BoardDetail}
                 options={{title:"게시글 상세보기"}}

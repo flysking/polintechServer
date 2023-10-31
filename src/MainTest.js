@@ -2,6 +2,7 @@ import React, {useState, useEffect,useLayoutEffect} from 'react';
 import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DrawerModal from './DrawerModal';
+
 function MainTest ({navigation,route}) {
     const {userInfo}=route.params;
     console.log(userInfo.id);
@@ -72,7 +73,6 @@ function MainTest ({navigation,route}) {
         });
     }, [navigation]);
 
-    
     const handleBoardList=()=>{
         navigation.navigate('TabBottomMain');
     };

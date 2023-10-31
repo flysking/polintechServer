@@ -9,7 +9,7 @@ const CheckLogin=({navigation})=>{
           const userInfo = await loadUserInfoAll();
           console.log('로그인체크 유저정보확인:',userInfo);
           // 사용자 정보가 있다면 로그인 상태로 간주하여 메인 화면으로 이동합니다.
-          if (userInfo) {
+          if (userInfo.id!==(null)) {
             Alert.alert('로그인 되어있습니다');
             console.log('로그인 정보 확인함');
             console.log('유저 정보 확인',userInfo);

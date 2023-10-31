@@ -44,6 +44,7 @@ function DrawerModal () {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <View style={styles.lines} />
             <View style={styles.mypageBox}>
                 <TouchableOpacity>
                     <Text style={styles.menuText}>
@@ -86,7 +87,6 @@ const styles=StyleSheet.create({
       profileBox:{
         marginTop:50,
         alignItems:'center',
-        borderBottomWidth:1,
       },
       profileImg:{
         borderColor:'#000000',
@@ -94,8 +94,15 @@ const styles=StyleSheet.create({
         width:125,
         height:125,
       },
+      lines:{
+        marginTop:15,
+        width:'80%',
+        //height:1,
+        borderBottomWidth:1,
+        borderColor:'lightgray',
+      },
       mypageBox:{
-        marginTop:40,
+        marginTop:30,
         marginVertical:10,
         marginHorizontal:'12.5%',
         justifyContent: 'center',
