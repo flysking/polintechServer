@@ -1,13 +1,16 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
 import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { loadUserInfoAll,logOut } from './Common';
+import { loadUserInfoAll,logOut,saveDarkmode,loadDarkmode } from './Common';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+//다크모드 추가하자
 function DrawerModal () {
     const [userInfo, setUserInfo]=useState({});
     const navigation=useNavigation();
     const [name,setName]=useState(null);
+    const [darkmode,setDarkmode]=useState(null);
+
     useEffect(()=>{
         const checkUserInfo=async()=>{
             const userData=await loadUserInfoAll();
@@ -27,6 +30,10 @@ function DrawerModal () {
     const handleIdc=()=>{
         console.log(name,'님 학생증으로 이동');
         navigation.navigate('StudentIDC',{userInfo:userInfo});
+    }
+    const handleSetting=()=>{
+        console.log('환경설정으로 이동');
+        navigation.navigate('Setting');
     }
 
     return(
@@ -65,8 +72,9 @@ function DrawerModal () {
                 </TouchableOpacity>
             </View>
             <View style={styles.settingBox}>
-                <TouchableOpacity onPress={logOutUser}>
-                    <Icon name="settings" style={styles.icon}color={'#000000'} size={25} />
+                {}
+                <TouchableOpacity onPress={handleSetting}>
+                    <Icon name="dark-mode" style={styles.icon}color={'#000000'} size={25} />
                 </TouchableOpacity>
             </View>
     </View>

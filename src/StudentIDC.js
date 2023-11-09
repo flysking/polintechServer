@@ -21,11 +21,21 @@ const StudentIDC=({navigation,route})=>{
             const data=await res.json();
             if (data.success){
               console.log('res 찾았음',data.idc);
-              setIdcInfo(data.idc);
               setHaveIdc(1);
+              const res2=await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/MyIdc/${member_id}`);
+              const data2=await res2.json();
+              if(data2.success){
+                console.log('학생증 발급된거 확인함');
+                setIdcInfo(data2.idc);
+                console.log(idcInfo);
+                return;
+              }else if(data2.error){
+                console.log('학생증 발급 대기중입니다!!');
+                return;
+              }
             }else if(data.error){
               console.log('학생증 발급 필요함');
-              Alert.alert('학생증이 없습니다.\n\n학생증을 발급받아주세요!')
+              Alert.alert('학생증이 없습니다.\n학생증을 발급받아주세요!')
               setHaveIdc(0);
             }
         }catch(error){
@@ -91,6 +101,23 @@ const StudentIDC=({navigation,route})=>{
                 console.log('db 삽입 완료');
                 console.log('유저:',id);
                 setHaveIdc(1);
+                try{
+                  console.log('학생증 db업로드');
+                  const res=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadIdc',{
+                    method:'POST',
+                    headers:{
+                      'Content-Type':'application/json',
+                    },
+                    body:JSON.stringify({idc_mid:id}),
+                  });
+                  await res;
+                  return;
+                  
+
+                }catch(error){
+                  console.error('데이터베이스 업로드 실패..',error);
+                  return;
+                }
               }else{
                 console.log('데이터베이스 업로드 실패..');
                 return;
@@ -183,7 +210,7 @@ const StudentIDC=({navigation,route})=>{
                 학생증 발급 대기 상태
               </Text>
             </SafeAreaView>
-          ) : (
+          ) : haveIdc===1 && idcInfo!==null(
             <SafeAreaView style={styles.block}>
               <Text>
                 학생증 발급 완료된 유저

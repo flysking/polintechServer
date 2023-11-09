@@ -15,7 +15,7 @@ const LoginScreen = ({navigation}) => {
 
 
   useEffect(()=>{
-    if(isLoggedIn=='0'){
+    if(isLoggedIn=='0'||isLoggedIn===(null)){
       const timer = setTimeout(() => {
         Alert.alert("로그인이 필요합니다.");
       }, 500); 

@@ -117,18 +117,17 @@ const BoardDetail = ({route, navigation}) => {
 
           // Handle image data...
         }
-
+        console.log('게시글 정보불로오기 실행 ');
         // 2. 상세보기 불러오기
         const boardResponse = await fetch(`${apiUrl}/BoardDetail/${boardId}`);
         if (!boardResponse.ok) {
           console.error('상세보기 요청 에러:', boardResponse.status);
         } else {
-          // console.log('상세보기 요청 ');
+          console.log('상세보기 요청 실행 완료 ');
           const boardData = await boardResponse.json();
           setBoard(boardData.board);
           setLikeCount(boardData.likes);
-          // console.log(boardData);
-          // Handle board data...
+          console.log('게시글 정보 확인 :  ',boardData.board);
         }
 
         // 3. 댓글 조회
@@ -161,7 +160,7 @@ const BoardDetail = ({route, navigation}) => {
     };
 
     fetchData();
-  }, [boardId, isImage, trigger]); // 여기에서 'apiUrl'도 의존성 배열에 포함되어 있습니다. 만약 상위 스코프에서 이미 정의되어 있다면 제거해주세요.
+  }, [boardId, isImage, trigger]); 
 
   useEffect(() => {
     //userinfo 불러오기
@@ -334,9 +333,6 @@ const BoardDetail = ({route, navigation}) => {
         ListHeaderComponent={
           <>
             <SafeAreaView style={styles.block}>
-              <View>
-                <Text style={styles.title}>게시글 이미지</Text>
-              </View>
               <Pressable>
                 {isImage ? (
                   <Image

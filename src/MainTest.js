@@ -1,5 +1,5 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
-import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
+import {ScrollView,Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DrawerModal from './DrawerModal';
 
@@ -22,10 +22,10 @@ function MainTest ({navigation,route}) {
             } catch (error) {
                 console.error(error);
             }
-        }else if(category==='학과'){
+        }else if(category==='학과게시판'){
             console.log('학과 카테고리 선택함');
             try {
-                const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
+                const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList/${category}`);
                 const json = await response.json();
                 if (json.success) {
                 setBoards(json.boards);
@@ -33,10 +33,10 @@ function MainTest ({navigation,route}) {
             } catch (error) {
                 console.error(error);
             }
-        }else if(category==='공지'){
-            console.log('공지 카테고리 선택함');
+        }else if(category==='익명게시판'){
+            console.log('익명 카테고리 선택함');
             try {
-                const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
+                const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList/${category}`);
                 const json = await response.json();
                 if (json.success) {
                 setBoards(json.boards);
@@ -74,7 +74,7 @@ function MainTest ({navigation,route}) {
     }, [navigation]);
 
     const handleBoardList=()=>{
-        navigation.navigate('TabBottomMain');
+        navigation.navigate('TabBottomMain',{category:category});
     };
     const top5Board = boards.slice(0,5);
 
@@ -86,15 +86,15 @@ function MainTest ({navigation,route}) {
                 >
                     <Text>전체</Text>
                 </TouchableOpacity >
-                <TouchableOpacity onPress={()=>setCategory('학과')}>
+                <TouchableOpacity onPress={()=>setCategory('학과게시판')}>
                     <Text>학과</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>setCategory('공지')}>
-                    <Text>공지</Text>
+                <TouchableOpacity onPress={()=>setCategory('익명게시판')}>
+                    <Text>익명</Text>
                 </TouchableOpacity>
             </View>
             <View>
-                <Text style={{marginTop:20, color:'black', fontSize:15,}}>게시글 목록</Text>
+                <Text style={{marginTop:20, color:'black', fontSize:15,}}>{category} 게시글 목록</Text>
                 <View style={styles.listContainer}>
                     <FlatList 
                         data={top5Board}
@@ -110,9 +110,18 @@ function MainTest ({navigation,route}) {
                     />
                 </View>
                 <TouchableOpacity onPress={handleBoardList}>
-                    <Text style={{color:'gray', marginLeft:190}}>더보기</Text>
+                    <Text style={{color:'gray', marginLeft:250}}>더보기</Text>
                 </TouchableOpacity>
             </View>
+            <View>
+                <Text style={{marginTop:20, color:'black', fontSize:15,}}>학사 일정</Text>
+                <View style={styles.listContainer2}>
+                </View>
+                <TouchableOpacity >
+                    <Text style={{color:'gray', marginLeft:250}}>더보기</Text>
+                </TouchableOpacity>
+            </View>
+            
             {modalVisible && ( //드로어 네비게이터
             <View style={styles.drawerBackground}>
             <Pressable style={styles.overlayBackground}
@@ -127,11 +136,16 @@ function MainTest ({navigation,route}) {
     ); 
 };
 const styles=StyleSheet.create({
+    block:{
+        width:'100%',
+        height:'100%',
+    },
     title:{
         color:'white',
         fontSize:20,
         fontWeight:'bold',
         textAlign:'left',
+        
     },
     container:{
         justifyContent: 'center',
@@ -155,6 +169,18 @@ const styles=StyleSheet.create({
         marginTop:10,
         paddingVertical:10,
         width:300,
+        height:235,
+        borderBlockColor:'#003497',
+        //backgroundColor:'#E6FFFF',
+        borderTopWidth:3,
+        borderBottomWidth:3,
+    },
+    listContainer2:{
+        flexDirection:'row',
+        marginTop:30,
+        paddingVertical:10,
+        width:300,
+        height:100,
         borderBlockColor:'#003497',
         //backgroundColor:'#E6FFFF',
         borderTopWidth:3,

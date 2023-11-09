@@ -26,6 +26,26 @@ export const saveUserInfoAll = async (data) => {
   }
 };
 
+export const saveDarkmode=async (data) => {
+  try{
+    const jsonValue=JSON.stringify(data);
+    await AsyncStorage.setItem('@darkmode',jsonValue);
+    console.log('다크모드 정보 저장 성공',data);
+  }catch(e){
+    console.error('다크모드 정보 저장 실패');
+  }
+};
+
+export const loadDarkmode = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('@darkmode');
+    console.log('다크모드 불러오기 성공');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    console.error('다크모드 로드 중 오류 발생:', e);
+  }
+};
+
 export const loadUserInfoAll = async () => {
   try {
     const keys = Object.keys({
@@ -41,7 +61,8 @@ export const loadUserInfoAll = async () => {
       iscert: 'iscert',
       isAdmin: 'isAdmin',
       grade: 'grade',
-      isLogin:'isLogin'
+      isLogin:'isLogin',
+      //majorname:'majorname',
     });
     const data = {};
     // 각 필드에 대한 AsyncStorage 키를 순회하며 데이터 불러오기

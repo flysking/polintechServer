@@ -55,7 +55,10 @@ function Sign({navigation}){
           }),
         });
         const json = await response.json();
-  
+        //현재 DTO값으로 인해 JSONParse에러 발생, 
+        //학과때문에 발생하는것으로 추정, 2번 회원가입 클릭하면 되긴함
+        //dto 클래스 수정, sql문 수정 필요함.
+        
         console.log('서버로부터의 응답 :', json);
   
         if (id === '') {
