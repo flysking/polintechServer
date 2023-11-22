@@ -21,7 +21,6 @@ function TabSearch({navigation}){
 
     );
 }
-
 const styles=StyleSheet.create({
     block:{},
 });
