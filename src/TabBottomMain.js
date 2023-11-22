@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import TabHome from "./TabHome";
 import TabNotice from "./TabNotice";
 import TabPopular from "./TabPopular";
@@ -11,55 +11,69 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const Tab=createBottomTabNavigator();
 
 function TabBottomMain({route}){
-    //const category = route.params;
-
+    useEffect(()=>{
+        const checkCategory=()=>{
+            console.log(route.params);
+        };
+        checkCategory();
+    },[]);
     return(
-        <Tab.Navigator>
+        <Tab.Navigator  >
             <Tab.Screen name="Home" component={TabHome}
                 options={{
                     title:"홈",
-                    headerShown:false,
+                    tabBarLabel:()=>null,
+                    //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="home" color={color} size={size} />
                     ),
                 }}
+                initialParams={{ category: route.params.category }}
             />
             <Tab.Screen name="Notice" component={TabNotice}
                 options={{
                     title:"공지",
-                    headerShown:false,
+                    tabBarLabel:()=>null,
+                    //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="announcement" color={color} size={size} />
                     ),
                 }}
+                initialParams={{ category: route.params.category }}
             />
             <Tab.Screen name="Popular" component={TabPopular}
                 options={{
                     title:"인기",
-                    headerShown:false,
+                    tabBarLabel:()=>null,
+                    //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="star" color={color} size={size} />
                     ),
                 }}
+                initialParams={{ category: route.params.category }}
             />
+            
             <Tab.Screen name="Search" component={TabSearch} 
                 options={{
                     title:"검색",
-                    headerShown:false,
+                    tabBarLabel:()=>null,
+                    //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="search" color={color} size={size} />
                     ),
                 }}
+                initialParams={{ category: route.params.category }}
             />
             <Tab.Screen name="Write" component={CreateBoard} 
                 options={{
                     title:"글쓰기",
-                    headerShown:false,
-                    
+                    tabBarLabel:()=>null,
+                    //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="edit" color={color} size={size} />
                     ),
                 }}
+                initialParams={{ category: route.params.category }}
             />
         </Tab.Navigator>
     );

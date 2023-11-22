@@ -3,13 +3,15 @@ import {ScrollView,Alert,TouchableOpacity,Dimensions,Image,TextInput,Pressable,P
 import  {saveLoginInfo, loadUserInfo, logOut } from './Common';
 import {launchImageLibrary} from 'react-native-image-picker';
 
+
 const StudentIDC=({navigation,route})=>{
     const {userInfo}=route.params;
     const [id,setId]=useState(userInfo.id);
     const [name, setName]=useState(userInfo.name);
     const [response,setResponse]=useState(null);
+    const [imgName,setImageName]=useState(null);
     const [showOverlay, setShowOverlay] = useState(false); // 추가
-    const [idcInfo,setIdcInfo]=useState([]);
+    const [idcInfo,setIdcInfo]=useState(null);
     const [haveIdc,setHaveIdc]=useState(null);
 
     useEffect(()=>{
@@ -25,10 +27,9 @@ const StudentIDC=({navigation,route})=>{
               const res2=await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/MyIdc/${member_id}`);
               const data2=await res2.json();
               if(data2.success){
-                console.log('학생증 발급된거 확인함');
+                console.log('학생증 발급된거 확인함',data2.idc);
                 setIdcInfo(data2.idc);
-                console.log(idcInfo);
-                return;
+                //return;
               }else if(data2.error){
                 console.log('학생증 발급 대기중입니다!!');
                 return;
@@ -45,6 +46,17 @@ const StudentIDC=({navigation,route})=>{
       };
       getIdc();
     },[]);
+
+    useEffect(()=>{
+      const searchImg=async()=>{
+        //이미지 불러오는 코드 만들어야함.
+
+      }
+    },[idcInfo]);
+
+    useEffect(() => {
+      console.log(idcInfo);
+    }, [idcInfo]);
 
     const onSelectImage=()=>{
       launchImageLibrary({
@@ -204,19 +216,30 @@ const StudentIDC=({navigation,route})=>{
           </Pressable>
         )}
         </SafeAreaView>
-          ) : haveIdc === 1 ? (
+          ) :  haveIdc===1 && idcInfo!==null ? (
+            <SafeAreaView style={styles.block}>
+              <View style={styles.card}>
+                <Image 
+                  style={styles.imageArea}
+                  source={
+                    response?{uri:response?.assets[0]?.uri}:
+                    { uri:`https://storage.googleapis.com/polintech_image/AppImage/user.png`}}
+                />
+                <View style={{alignContent:'center', width:'80%',marginTop:10}}>
+                  <Text style={{fontSize:20,textAlign:'left', color:'#000000', fontWeight:'bold'}}>{idcInfo.member_name}</Text>
+                  <Text style={{fontSize:20,textAlign:'left', color:'#000000', fontWeight:'bold'}}>{idcInfo.major_name}</Text>
+                  <Text style={{fontSize:20,textAlign:'left', color:'#000000', fontWeight:'bold'}}>{id}</Text>
+                </View>
+
+              </View>
+            </SafeAreaView>
+          ): haveIdc === 1 ? (
             <SafeAreaView style={styles.block}>
               <Text>
                 학생증 발급 대기 상태
               </Text>
             </SafeAreaView>
-          ) : haveIdc===1 && idcInfo!==null(
-            <SafeAreaView style={styles.block}>
-              <Text>
-                학생증 발급 완료된 유저
-              </Text>
-            </SafeAreaView>
-          )}
+          ) : null}
       </ScrollView>
     );
 };
@@ -308,6 +331,15 @@ const styles=StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  card:{
+    backgroundColor:'white',
+    width:300,
+    height:512,
+    alignItems:'center',
+    borderWidth:3,
+    borderColor:'#000000',
+    borderRadius:15,
+  }
 })
 
 export default StudentIDC;

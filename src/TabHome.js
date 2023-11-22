@@ -1,14 +1,19 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
 import moment from 'moment';
 import {View, Text, FlatList, TouchableOpacity,StyleSheet} from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
-function TabHome({navigation,route}){
+function TabHome({navigation}){
     const [boards, setBoards] = useState([]);
-    const category=route.params;
-    //console.log(category);
+    const route=useRoute();
+    const category=route.params.category;
+    const [noCategory,setNoCategory]=useState(false);
+    console.log(category);
+
     useLayoutEffect(() => {
         navigation.setOptions({
           title: category,
+          tabBarLabel:()=>null,
           headerStyle: {
             backgroundColor: 'red',
           },
@@ -18,11 +23,11 @@ function TabHome({navigation,route}){
 
     useEffect(() => {
         const fetchBoards = async () => {
-            if(category==='전체게시판'){
+            if(category==='전체'){
                 try {
                     const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
                     const json = await response.json();
-                    console.log('tabhome 게시글 불러오기 실행');
+                    console.log('tabhome 전체 게시글 불러오기 실행');
                     if (json.success) {
                     setBoards(json.boards);
                     }
@@ -33,7 +38,7 @@ function TabHome({navigation,route}){
                 try {
                     const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList/${category}`);
                     const json = await response.json();
-                    console.log('tabhome 게시글 불러오기 실행');
+                    console.log('tabhome 학과게시글 불러오기 실행');
                     if (json.success) {
                     setBoards(json.boards);
                     }
@@ -44,7 +49,18 @@ function TabHome({navigation,route}){
                 try {
                     const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList/${category}`);
                     const json = await response.json();
-                    console.log('tabhome 게시글 불러오기 실행');
+                    console.log('tabhome 익명게시글 불러오기 실행');
+                    if (json.success) {
+                    setBoards(json.boards);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }else if(category==='학사일정'){
+                try {
+                    const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList/학사일정`);
+                    const json = await response.json();
+                    console.log('tabhome 학사일정 불러오기 실행');
                     if (json.success) {
                     setBoards(json.boards);
                     }
@@ -52,18 +68,9 @@ function TabHome({navigation,route}){
                     console.error(error);
                 }
             }else{
-                try {
-                    const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardList');
-                    const json = await response.json();
-                    console.log('tabhome 게시글 불러오기 실행');
-                    if (json.success) {
-                    setBoards(json.boards);
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
+                console.log('선택된 카테고리가 없음..');
+                setNoCategory(true);
             }
-
         };
 
         fetchBoards();
@@ -74,7 +81,10 @@ function TabHome({navigation,route}){
 
     return (
         <View style={styles.block}>
-            {boards===null?(
+            {noCategory ? (
+                <Text>카테고리가 선택되지 않았습니다.</Text>
+            ):(
+                boards===null?(
                 <Text>생성된 게시글이 없습니다.</Text>
             ):(
                 <FlatList 
@@ -94,6 +104,7 @@ function TabHome({navigation,route}){
             </View>
             )}
             />
+            )
             )}
     </View>
     );

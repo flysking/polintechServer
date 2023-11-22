@@ -1,7 +1,7 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
 import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { loadUserInfoAll,logOut,saveDarkmode,loadDarkmode } from './Common';
+import { loadUserInfoAll,logOut,saveDarkmode,loadDarkmode,saveHaveProfile,loadHaveProfile } from './Common';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 //다크모드 추가하자
@@ -10,6 +10,7 @@ function DrawerModal () {
     const navigation=useNavigation();
     const [name,setName]=useState(null);
     const [darkmode,setDarkmode]=useState(null);
+    const [haveProfile,setHaveProfile]=useState(null);
 
     useEffect(()=>{
         const checkUserInfo=async()=>{
@@ -22,6 +23,19 @@ function DrawerModal () {
         };
         checkUserInfo();
     },[]);
+
+    useEffect(()=>{
+        const checkHaveProfile=async()=>{
+            const checkProfile=await loadHaveProfile();
+            if(checkProfile===0){
+                setHaveProfile(0);
+            }else{
+                setHaveProfile(1);
+            }
+        };
+        checkHaveProfile();
+    },[haveProfile]);
+
     const logOutUser=async()=>{
         await logOut();
         console.log('로그아웃 완료');
@@ -32,18 +46,24 @@ function DrawerModal () {
         navigation.navigate('StudentIDC',{userInfo:userInfo});
     }
     const handleSetting=()=>{
-        console.log('환경설정으로 이동');
-        navigation.navigate('Setting');
+        setDarkmode(1);
     }
 
     return(
         <View style={styles.overlayBox}>
             <View style={styles.profileBox}>
                 <TouchableOpacity>
-                    <Image
-                        source={require('../image/profile.gif')}
-                        style={styles.profileImg}
-                    />
+                    {haveProfile === 0 ?(
+                        <Image
+                            source={require('../image/profile.gif')}
+                            style={styles.profileImg}
+                        />
+                    ) : (
+                        <Image
+                            source={require('../image/profile.gif')}
+                            style={styles.profileImg}
+                        />
+                    )}
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Text style={{ color:'#000000',marginTop:15, fontSize:20,}}>

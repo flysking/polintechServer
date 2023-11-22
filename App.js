@@ -50,13 +50,13 @@ function App(){
                 <RootStack.Screen name="PwEmailAuth" component={PwEmailAuth} 
                 options={{headerShown:false}}/>                               
                 <RootStack.Screen name="PwRecover" component={PwRecover}
-                options={{title:"학생증"}}/>
+                options={{title:"비밀번호 복구"}}/>
                 <RootStack.Screen name="PwUpdate" component={PwUpdate} 
                 options={{headerShown:false}}/>
                 <RootStack.Screen name="MainTest" component={MainTest} 
                 />
                 <RootStack.Screen name="StudentIDC" component={StudentIDC}
-                options={{headerShown:false}}
+                options={{title:"학생증"}}
                 />
                 <RootStack.Screen name="BoardDetail" component={BoardDetail}
                 options={{title:"게시글 상세보기"}}
@@ -73,7 +73,7 @@ function App(){
                 options={{title:"게시글 상세보기"}}
                 />
                 <RootStack.Screen name="TabBottomMain" component={TabBottomMain}
-                options={{title:"게시판"}}
+                options={{headerShown:false}}
                 />    
             </RootStack.Navigator>
         </NavigationContainer>

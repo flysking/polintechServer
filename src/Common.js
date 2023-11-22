@@ -26,6 +26,25 @@ export const saveUserInfoAll = async (data) => {
   }
 };
 
+export const saveHaveProfile=async(data) => {
+  try{
+    const jsonValue=JSON.stringify(data);
+    await AsyncStorage.setItem('@haveProfile',jsonValue);
+    console.log('프로필 이미지 정보 저장');
+  }catch(e){
+    console.error('프로필 이미지가 저장되지 않았음');
+  }
+};
+export const loadHaveProfile = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('@haveProfile');
+    console.log('프로필 정보 확인');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    console.error('프로필 로드 중 오류 발생:', e);
+  }
+};
+
 export const saveDarkmode=async (data) => {
   try{
     const jsonValue=JSON.stringify(data);
