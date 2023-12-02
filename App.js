@@ -19,9 +19,11 @@ import PwAuthCode from './src/PwAuthCode';
 import PwEmailAuth from './src/PwEmailAuth';
 import PwRecover from './src/PwRecover';
 import PwUpdate from './src/PwUpdate';
+import MyPage from './src/MyPage';
 
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CreateBoard from './src/CreateBoard';
 
 const RootStack = createNativeStackNavigator();
 
@@ -55,6 +57,7 @@ function App(){
                 options={{headerShown:false}}/>
                 <RootStack.Screen name="MainTest" component={MainTest} 
                 />
+                <RootStack.Screen name="MyPage" component={MyPage} />
                 <RootStack.Screen name="StudentIDC" component={StudentIDC}
                 options={{title:"학생증"}}
                 />
@@ -74,7 +77,10 @@ function App(){
                 />
                 <RootStack.Screen name="TabBottomMain" component={TabBottomMain}
                 options={{headerShown:false}}
-                />    
+                />  
+                <RootStack.Screen name="CreateBoard" component={CreateBoard} 
+                options={{title:"게시글 작성"}}
+                /> 
             </RootStack.Navigator>
         </NavigationContainer>
 

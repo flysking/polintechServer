@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import moment from 'moment';
 import {
+  ScrollView,
   Image,
   View,
   Text,
@@ -10,8 +12,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Pressable,
+  Dimensions,
+  Alert,
 } from 'react-native';
 import {saveLoginInfo, loadUserInfoAll, logOut} from './Common';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 const BoardDetail = ({route, navigation}) => {
   const apiUrl = 'https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app';
   const [board, setBoard] = useState(null);
@@ -32,7 +37,11 @@ const BoardDetail = ({route, navigation}) => {
   const [response, setResponse] = useState(null); //이미지 출력 테스트 변수
   const [isImage, setIsImage] = useState(false); //게시글에 이미지 존재 여부
   const [imageName, setImageName] = useState(''); //게시글에 이미지 이름
+  const [modalVisible, setModalVisible] = useState(false);//모달창을 띄우기 위한 변수
   
+  //약 4~5분정도 후에 Loading끝나는것 확인
+  //await가 너무 많이 실행되서 그런것으로 추정됨.
+  //기다려본 결과 시간이 지난 후에 지금까지 클릭했던 await 명령을 순차적으로 수행함.
   //BoardDetail 최적화중
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -67,7 +76,24 @@ const BoardDetail = ({route, navigation}) => {
   //   fetchData();
   // }, [boardId, isImage, trigger]);
   //BoardDetail 최적화
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+        headerTitleStyle: {
+          color: '#ffffff', // 헤더 제목의 색상
+        },
+        headerTintColor: '#ffffff',
+        headerStyle: {
+            backgroundColor: '#003497',
+        },
+        headerRight: () => (
+            <View>
+                <TouchableOpacity onPress={()=>setModalVisible(true)}>
+                        <Icon name="more-vert" style={styles.icon}color={'#ffffff'} size={25} />
+                </TouchableOpacity>
+            </View>
+        ),
+    });
+  }, [navigation]);
   const onSelectImage = () => {
     //이미지 출력 테스트 함수
     launchImageLibrary(
@@ -86,10 +112,17 @@ const BoardDetail = ({route, navigation}) => {
       },
     );
   };
-
   useEffect(() => {
     //조회수 증가 불러오기
-    fetch(`${apiUrl}/BoardHitsUpdate/${boardId}`);
+    const updateHits=async()=>{
+      try{
+        await fetch(`${apiUrl}/BoardHitsUpdate/${boardId}`);
+
+      }catch(error){
+        console.error("조회수 증가 도중 오류 발생...",error);
+      }
+    };
+    updateHits();
   }, [boardId]);
 
   useEffect(() => {
@@ -110,6 +143,7 @@ const BoardDetail = ({route, navigation}) => {
             setIsImage(true);
             setImageName(imageData.imageData.image_name);
             console.log('이미지 여부(true) : ', isImage);
+            console.log('이미지 이름:',imageName);
           } else {
             setIsImage(false);
             console.log('이미지 여부(false) : ', isImage);
@@ -128,6 +162,9 @@ const BoardDetail = ({route, navigation}) => {
           setBoard(boardData.board);
           setLikeCount(boardData.likes);
           console.log('게시글 정보 확인 :  ',boardData.board);
+          navigation.setOptions({
+            title:boardData.board.board_title,
+          });
         }
 
         // 3. 댓글 조회
@@ -164,7 +201,7 @@ const BoardDetail = ({route, navigation}) => {
 
   useEffect(() => {
     //userinfo 불러오기
-    const fetchData = async () => {
+    const fetchUser = async () => {
       const savedData = await loadUserInfoAll(); //Common폴더에 있는 userinfo
 
       if (savedData) {
@@ -178,7 +215,7 @@ const BoardDetail = ({route, navigation}) => {
       }
     };
 
-    fetchData();
+    fetchUser();
   }, []);
 
   const handleLike = async () => {
@@ -191,7 +228,7 @@ const BoardDetail = ({route, navigation}) => {
       return;
     }
 
-    fetch(`${apiUrl}/LikePlus`, {
+    await fetch(`${apiUrl}/LikePlus`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -248,14 +285,9 @@ const BoardDetail = ({route, navigation}) => {
       // console.log('게시글 삭제 중 오류 발생:', error);
     }
   };
-
-  useEffect(() => {
-    // console.log('게시글 좋아요 갯수(게시글 출력시) : ', likeCount);
-  }, [likeCount]);
-
   // 댓글 저장 함수
-  const handleComment = () => {
-    fetch(`${apiUrl}/CommentAdd`, {
+  const handleComment = async() => {
+    await fetch(`${apiUrl}/CommentAdd`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -305,6 +337,8 @@ const BoardDetail = ({route, navigation}) => {
     }
   };
 
+
+
   const onReplyClick = (reply_id, reply_cid, reply_mid, reply_content) => {
     //답글 클릭시
     if (reply_mid == id) {
@@ -319,76 +353,83 @@ const BoardDetail = ({route, navigation}) => {
     }
   };
 
+  const formatDate = (dateString) => {
+    return moment(dateString).format('YYYY-MM-DD HH:mm');
+  };
+  const report = (board_id) =>{
+    console.log('신고할 게시글 id : ',board_id);
+    Alert.alert('준비 중인 기능입니다.');
+  };
+
+  const handleBookmark =(board_title) =>{
+    console.log('즐겨찾기 추가한 게시글 제목 : ',board_title);
+    Alert.alert('준비 중인 기능입니다~');
+  };
+
 
   if (!board) return <Text>Loading...</Text>;
 
   return (
-    <View>
-      {
-        //게시글 작성자(Id => 학번은 추후 수정)
-      }
-
+    <SafeAreaView style={{width:'100%',}}>
       <FlatList
-        data={comments}
         ListHeaderComponent={
           <>
-            <SafeAreaView style={styles.block}>
-              <Pressable>
-                {isImage ? (
-                  <Image
-                    style={styles.imageArea}
-                    source={
-                      // response
-                      //   ? {uri: response?.assets[0]?.uri}
-                      // : //response 값이 없을때 default로 보여줄 이미지입니다.
-                      //만약 이미지를 다른걸 쓰신다면 uri의 AppImage/ 뒤에 다른 이미지를 선택하심됩니다.
-                      //현재는 user.png파일로 되어있고, 원하는 이미지가 있으시면 카톡에 올려주세요!!
-                      {
-                        uri: `https://storage.googleapis.com/polintech_image/ServerImage/${imageName}`,
-                      }
-                    }
-                  />
-                ) : null}
-              </Pressable>
-              <View style={styles.form}></View>
-            </SafeAreaView>
-            {/* 게시글 및 기타 콘텐츠를 이곳에 배치합니다 */}
-            <Text>게시글 작성자 : {board.board_mid}</Text>
-            <Text>작성자 : {board.member_nickname}</Text>
-            <Text>게시글 조회수 : {board.board_hits}</Text>
-            <Text>게시글 카테고리 : {board.board_category}</Text>
-            <Text>게시글 Sub카테고리 : {board.board_subcategory}</Text>
-            <Text>게시글 id : {board.board_id}</Text>
-            <Text>게시글 작성일 : {board.board_postdate}</Text>
-            <Text>좋아요 수: {likeCount}</Text>
-            <Text>게시글 제목 : {board.board_title}</Text>
-            <Text>게시글 내용 : {board.board_content}</Text>
-            {/* ... */}
-
-            <Button title="좋아요" onPress={handleLike} />
-            {board.board_mid === id && (
-              <>
-                <Button title="수정하기" onPress={() => onEditClick(boardId)} />
-                <Button title="삭제하기" onPress={handleDelete} />
-              </>
-            )}
-
-            <TextInput
-              style={{
-                borderWidth: 1,
-                borderColor: 'grey',
-                padding: 10,
-                margin: 10,
-              }}
-              value={comment}
-              onChangeText={setComment}
-              placeholder="댓글을 입력하세요..."
-            />
-            <Button title="댓글 등록" onPress={handleComment} />
-            {/* 기타 콘텐츠 */}
-            <Text>댓글 목록:</Text>
+              <View style={styles.block}>
+                <View style={styles.header}>
+                  <Text style={styles.txtTitle}>[{board.board_subcategory}]{board.board_title}</Text>
+                  <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                    <Text style={styles.txtMember}>{board.member_name}</Text>
+                    <Text>{formatDate(board.board_postdate)}</Text>
+                  </View>
+                  <Text>조회 {board.board_hits} | 좋아요 {likeCount}</Text>
+                </View>
+                <View style={styles.line}></View>
+                <View style={{textAlign:'left',width:'100%',minHeight:250,}}>
+                  <View style={{width:'100%',alignItems:'center'}}>
+                    <Pressable>
+                    {isImage ? (
+                      <Image
+                        style={styles.imageArea}
+                        source={{
+                            uri: `https://storage.googleapis.com/polintech_image/ServerImage/${imageName}`,
+                          }
+                        }
+                      />
+                      ) : null}
+                    </Pressable>
+                  </View>
+                <View style={styles.content}>
+                  <Text style={{color:'#000000',fontSize:15,}}>{board.board_content}</Text>
+                </View>
+              </View>
+              <View style={{width:'100%', flexDirection:'row', justifyContent:'center', marginVertical:20,}}>
+              <TouchableOpacity onPress={handleLike}>
+                <Icon name="favorite" style={styles.icon}color={'red'} size={30} />
+              </TouchableOpacity>
+              <Text style={{marginLeft:10,fontSize:20,}}>{likeCount}</Text>
+            </View>
+            </View>
+            <View style={{backgroundColor:'#ffffff',justifyContent:'center',flexDirection:'row', borderBottomWidth:1,borderTopWidth:1,borderColor:'gray'}}>
+              <TextInput
+                style={{
+                  flex:8,
+                  padding: 5,
+                  margin: 5,
+                }}
+                value={comment}
+                onChangeText={setComment}
+                placeholder="댓글을 입력하세요..."
+              />
+              <TouchableOpacity style={{flex:2,margin:5, paddingHorizontal:15,paddingVertical:15,backgroundColor:'#003497',borderRadius:10}} onPress={handleComment}>
+                <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'bold'}}>등록</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{backgroundColor:'#gray',height:30, justifyContent:'center'}}>
+              <Text style={{marginLeft:10,fontSize:15,color:'#000000'}}>댓글 목록:</Text>
+            </View>
           </>
         }
+        data={comments}
         keyExtractor={(item, index) =>
           item.comment_id
             ? item.comment_id.toString()
@@ -396,7 +437,7 @@ const BoardDetail = ({route, navigation}) => {
         }
         renderItem={({item}) =>
           item.comment_id ? (
-            <View>
+            <View style={styles.commentArea}>
               <TouchableOpacity
                 onPress={() =>
                   onCommentClick(
@@ -407,12 +448,11 @@ const BoardDetail = ({route, navigation}) => {
                 }>
                 <Text>
                   {'['}
-                  {item.member_nickname}
+                  {item.member_name}
                   {']'} : {item.comment_content}{' '}
                   {item.comment_mid === id ? '[댓글 수정]' : '[답글]'}
                 </Text>
               </TouchableOpacity>
-
               {Array.isArray(replys) && replys.length > 0 && (
                 <FlatList
                   data={replys.filter(
@@ -436,7 +476,7 @@ const BoardDetail = ({route, navigation}) => {
                         }>
                         <Text>
                           {'   ['}
-                          {reply.member_nickname}
+                          {reply.member_name}
                           {']'} : {reply.reply_content}{' '}
                           {reply.reply_mid === id ? '[답글 수정]' : ''}
                         </Text>
@@ -449,32 +489,136 @@ const BoardDetail = ({route, navigation}) => {
           ) : null
         }
       />
-    </View>
+      {modalVisible && ( //드로어 네비게이터
+            <View style={styles.drawerBackground}>
+              <Pressable style={styles.overlayBackground}
+              onPress={()=>setModalVisible(false)}>
+                  {board.board_mid === id ? (
+                    <View style={styles.overlayBox}>
+                      <Pressable onPress={() => onEditClick(boardId)}>
+                        <Text style={styles.drawerFont}>수정하기</Text>
+                      </Pressable>
+                      <Pressable onPress={handleDelete}>
+                        <Text style={styles.drawerFont}>삭제하기 </Text>
+                      </Pressable>
+                      <Pressable onPress={() => handleBookmark(boardId)}>
+                        <Text style={styles.drawerFont}>즐겨찾기</Text>
+                      </Pressable>
+                  </View>
+                  ):(
+                  <View style={styles.overlayBox2}>
+                    <Pressable onPress={() => handleBookmark(board.board_title)}>
+                      <Text style={styles.drawerFont}>즐겨찾기</Text>
+                    </Pressable>
+                    <Pressable onPress={()=>report(boardId)}>
+                      <Text style={styles.drawerFont}>신고하기</Text>
+                    </Pressable>
+                 </View>                   
+                  )}
+              </Pressable>
+            </View>
+          )}
+    </SafeAreaView>
+
   );
 };
 const styles = StyleSheet.create({
+  txtTitle:{
+    fontSize:20,
+    color:'#000000',
+  },
+  txtMember:{
+    color:'#000000',
+  },
   title: {
     marginTop: 50,
     fontSize: 30,
     color: '#000000',
   },
   block: {
-    alignItems: 'center',
-    marginTop: 24,
-    paddingHorizontal: 16,
+    //alignItems: 'center',
+    //paddingHorizontal: 16,
     width: '100%',
+    backgroundColor:'#ffffff',
   },
   imageArea: {
+    paddingHorizontal:16,
     marginTop: 20,
     backgroundColor: '#cdcdcd',
     borderRadius: 10,
-    width: 256,
-    height: 256,
+    width:400,
+    height:400,
   },
-  form: {
-    marginTop: 16,
+  header: {
+    //flexDirection:'row',
+    marginTop:10,
+    paddingHorizontal:16,
     width: '100%',
+    //alignItems: 'center',
+  },
+  line:{
+    marginTop:15,
+    width:512,
+    height:1,
+    borderBottomWidth:2,
+    borderColor:'#e8e8e8',
+  },
+  content:{
+    marginTop:30,
+    marginHorizontal:10,
+  },
+  commentArea:{
+    backgroundColor:'#ffffff',
+    paddingHorizontal:10,
+    paddingBottom:20,
+  },
+  overlayBox: {
+    position:'absolute',
+    width:100,
+    height:120,
+    right:0,
+    paddingVertical:10,
+    marginTop:30,
+    borderColor:'#000000',
+    borderWidth:1,
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  overlayBox2: {
+    position:'absolute',
+    width:100,
+    height:70,
+    right:0,
+    paddingVertical:10,
+    marginTop:30,
+    borderColor:'#000000',
+    borderWidth:1,
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  drawerFont:{
+    color:'#000000',
+  },
+  drawerBackground:{
+    position:'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: Dimensions.get('window').width, // 화면 너비
+    height: Dimensions.get('window').height,    
+},
+overlayBackground: {
+    width: Dimensions.get('window').width, // 화면 너비
+    height: Dimensions.get('window').height,
+    position: 'absolute',
+    marginTop:-24,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0, 
   },
 });
 export default BoardDetail;

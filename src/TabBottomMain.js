@@ -22,7 +22,7 @@ function TabBottomMain({route}){
             <Tab.Screen name="Home" component={TabHome}
                 options={{
                     title:"홈",
-                    tabBarLabel:()=>null,
+                    //tabBarLabel:'홈',
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="home" color={color} size={size} />
@@ -33,7 +33,7 @@ function TabBottomMain({route}){
             <Tab.Screen name="Notice" component={TabNotice}
                 options={{
                     title:"공지",
-                    tabBarLabel:()=>null,
+                    //tabBarLabel:'공지',
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="announcement" color={color} size={size} />
@@ -44,7 +44,7 @@ function TabBottomMain({route}){
             <Tab.Screen name="Popular" component={TabPopular}
                 options={{
                     title:"인기",
-                    tabBarLabel:()=>null,
+                    //tabBarLabel:()=>null,
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="star" color={color} size={size} />
@@ -56,7 +56,7 @@ function TabBottomMain({route}){
             <Tab.Screen name="Search" component={TabSearch} 
                 options={{
                     title:"검색",
-                    tabBarLabel:()=>null,
+                    //tabBarLabel:()=>null,
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="search" color={color} size={size} />
@@ -67,7 +67,7 @@ function TabBottomMain({route}){
             <Tab.Screen name="Write" component={CreateBoard} 
                 options={{
                     title:"글쓰기",
-                    tabBarLabel:()=>null,
+                    //tabBarLabel:()=>null,
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
                         <Icon name="edit" color={color} size={size} />

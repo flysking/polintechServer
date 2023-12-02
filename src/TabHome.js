@@ -13,7 +13,7 @@ function TabHome({navigation}){
     useLayoutEffect(() => {
         navigation.setOptions({
           title: category,
-          tabBarLabel:()=>null,
+          
           headerStyle: {
             backgroundColor: 'red',
           },
@@ -95,7 +95,7 @@ function TabHome({navigation}){
                 <View style={styles.list}>
                 <TouchableOpacity  onPress={() => navigation.navigate('BoardDetail', { boardId: item.board_id })}>
                     <View styles={{flexDirection:'row'}}>
-                        <Text style={{color:'black', fontSize:20}}>{item.board_title} [{item.board_hits}]</Text>
+                        <Text style={{color:'black', fontSize:20}}>[{item.board_subcategory}]{item.board_title}</Text>
                     </View>
                     <View styles={{flexDirection:'row'}}>
                         <Text style={{color:'gray',marginLeft:5}}>{item.board_mid} 조회 {item.board_hits} 작성일 {formatDate(item.board_postdate)} </Text>

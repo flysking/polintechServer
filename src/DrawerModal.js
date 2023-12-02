@@ -44,10 +44,14 @@ function DrawerModal () {
     const handleIdc=()=>{
         console.log(name,'님 학생증으로 이동');
         navigation.navigate('StudentIDC',{userInfo:userInfo});
-    }
+    };
     const handleSetting=()=>{
         setDarkmode(1);
-    }
+    };
+    const handleMypage=()=>{
+        console.log('마이페이지 이동');
+        navigation.navigate('MyPage',{userInfo:userInfo});
+    };
 
     return(
         <View style={styles.overlayBox}>
@@ -73,7 +77,7 @@ function DrawerModal () {
             </View>
             <View style={styles.lines} />
             <View style={styles.mypageBox}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleMypage}>
                     <Text style={styles.menuText}>
                         마이페이지
                     </Text>

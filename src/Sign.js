@@ -161,6 +161,8 @@ function Sign({navigation}){
     return (
       <SafeAreaView>
       <ScrollView>
+      <Text style={styles.headerText}>회원가입</Text>
+      <Text style={styles.labelText}>학번</Text>
       <TextInput
         style={styles.input}
         value={id}
@@ -168,6 +170,7 @@ function Sign({navigation}){
         placeholder="학번"
       />
       <Text>{idMessage}</Text>
+      <Text style={styles.labelText}>비밀번호</Text>
       <TextInput
         style={styles.input}
         value={pw}
@@ -192,6 +195,7 @@ function Sign({navigation}){
           ? '특수문자를 포함해주세요.'
           : '사용 가능한 비밀번호입니다.'}
       </Text>
+      <Text style={styles.labelText}>비밀번호 확인</Text>
       <TextInput
         style={styles.input}
         value={pwConfirmation}
@@ -206,12 +210,14 @@ function Sign({navigation}){
             : '비밀번호가 일치하지 않습니다.'}
         </Text>
       )}
+      <Text style={styles.labelText}>이름</Text>
       <TextInput
         style={styles.input}
         value={name}
         onChangeText={setName}
         placeholder="이름"
       />
+      <Text style={styles.labelText}>닉네임</Text>
       <TextInput
         style={styles.input}
         value={nickname}
@@ -225,15 +231,19 @@ function Sign({navigation}){
           ? '닉네임은 5~8자로 입력해주세요'
           : ''}
       </Text>
+      <Text style={styles.labelText}>영문 이름</Text>
       <TextInput
         style={styles.input}
         value={engname}
         onChangeText={setEngname}
-        placeholder="영어 이름"
+        placeholder="영문 이름"
       />
+      <View style={styles.pickerContainer}>
+      <View style={styles.majorPickerWrapper}>
       <Picker
         selectedValue={major}
         onValueChange={itemValue => setMajor(itemValue)}
+        style={styles.picker}
       >
         <Picker.Item label="학과를 선택해주세요" value="" />
         <Picker.Item label="AI융합소프트웨어" value="1" />
@@ -250,20 +260,27 @@ function Sign({navigation}){
         <Picker.Item label="건축설계" value="12" />
         <Picker.Item label="디지털융합" value="13" />
       </Picker>
+      </View>
+      <View style={styles.gradePickerWrapper}>
       <Picker
         selectedValue={grade}
         onValueChange={itemValue => setGrade(itemValue)}
+        style={styles.picker}
       >
-        <Picker.Item label="학년을 선택해주세요" value="" />
+        <Picker.Item label="학년" value="" />
         <Picker.Item label="1학년" value="1" />
         <Picker.Item label="2학년" value="2" />
-      </Picker>
+        </Picker>
+      </View>
+      </View>
+      <Text style={styles.labelText}>생년월일</Text>
       <TextInput
         style={styles.input}
         value={birth}
         onChangeText={setBirth}
         placeholder="생년월일 (6자리)"
       />
+      <Text style={styles.labelText}>성별</Text>
       <View style={styles.radioOptions}>
         <TouchableOpacity
           onPress={() => setGender('남자')}
@@ -271,7 +288,7 @@ function Sign({navigation}){
             styles.radioOption,
             gender === '남자' ? styles.checkedOption : null,
           ]}>
-          <Text>남자</Text>
+          <Text style={gender === '남자' ? styles.checkedOption : null}>남자</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setGender('여자')}
@@ -279,9 +296,10 @@ function Sign({navigation}){
             styles.radioOption,
             gender === '여자' ? styles.checkedOption : null,
           ]}>
-          <Text>여자</Text>
+          <Text style={gender === '여자' ? styles.checkedOption : null}>여자</Text>
         </TouchableOpacity>
       </View>
+      <Text style={styles.labelText}>이메일</Text>
       <View style={styles.emailContainer}>
         <TextInput
           style={styles.emailInput}
@@ -332,7 +350,9 @@ function Sign({navigation}){
             ))}
           </Picker>
         )}
-        <Button title="이메일 인증" onPress={emailAuth} />
+        <TouchableOpacity style={styles.button} onPress={emailAuth}>
+        <Text style={{ color: 'white' }}>이메일 인증</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.emailAuthContainer}>
         <TextInput
@@ -341,92 +361,189 @@ function Sign({navigation}){
           onChangeText={setAuthCheck}
           placeholder="인증번호"
         />
-        <Button title="  확인  " onPress={handleAuthCheck} />
+        <TouchableOpacity style={styles.button} onPress={handleAuthCheck}>
+        <Text style={{ color: 'white' }}> 확인 </Text>
+        </TouchableOpacity>
       </View>
       
-      <Button title="회원가입" onPress={signuser} />
-      <Button title="가입취소" onPress={handleCancel} />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.signupButton]}
+          onPress={signuser}>
+          <Text style={{ color: 'white' }}>회원가입</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.cancelButton]}
+          onPress={handleCancel}>
+          <Text style={{ color: 'white' }}>가입취소</Text>
+        </TouchableOpacity>
+      </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 8,
-    paddingHorizontal: 8,
-  },
-  phoneInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  phoneInput: {
-    flex: 1,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 8,
-  },
-  phoneSeparator: {
-    marginHorizontal: 4,
-  },
-  radioOptions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  radioOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 16,
-    padding: 5,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  checkedOption: {
-    borderColor: 'lightgray',
-  },
-  emailContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  emailInput: {
-    flex: 1,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 8,
-  },
-  atSymbol: {
-    paddingHorizontal: 8,
-  },
-  emailOptionPicker: {
-    flex: 2,
-  },
-  passwordMessage: {
-    marginBottom: 8,
-    color: 'red',
-  },
-  nickMessage: {
-    marginBottom: 8,
-    color: 'red',
-  },
-  emailAuthContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  emailAuthInput: {
-    flex: 0.7,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 8,
-  },
+ //상단헤더 회원가입 문구
+ headerText: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  backgroundColor: '#003497',
+  color: 'white',
+  padding: 13,
+  textAlign: 'center',
+},
+  //입력칸 위 문구 스타일
+  labelText: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  marginTop: 25,
+  marginLeft: 20,
+  marginBottom: 2, // input 스타일과 일치하도록 조절
+  color: '#003497',
+},
+//입력칸
+input: {
+  fontSize: 12,
+  height: 35,
+  borderBottomColor: '#003497',
+  borderBottomWidth: 0.9,
+  marginTop: -10,
+  marginLeft: 20,
+  marginRight: 20,
+  paddingHorizontal: 2,
+  paddingBottom: 2,
+},
+//아이디 입력칸, 비밀번호 텍스트 사이 간격
+idMessageText: {
+margin: -10, // 텍스트 주변의 여백 제거
+},
+
+phoneInputContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 8,
+},
+phoneInput: {
+  flex: 1,
+  height: 40,
+  borderColor: 'gray',
+  borderWidth: 1,
+  paddingHorizontal: 8,
+},
+phoneSeparator: {
+  marginHorizontal: 4,
+},
+radioOptions: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginLeft: 15,
+},
+radioOption: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginRight: 16,
+  padding: 5,
+  borderWidth: 1,
+  borderColor: 'transparent',
+},
+checkedOption: {
+  color: '#132444',
+  fontWeight: 'bold',
+},
+emailContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 5,
+  marginLeft: 15,
+  marginRight: 15,
+},
+emailInput: {
+  flex: 1,
+  height: 40,
+  borderColor: 'gray',
+  borderWidth: 1,
+  paddingHorizontal: 8,
+  marginRight: -3,
+},
+atSymbol: {
+  paddingHorizontal: 8,
+},
+emailOptionPicker: {
+  flex: 2,
+},
+passwordMessage: {
+  color: 'red',
+  margin: -10,
+},
+nickMessage: {
+  color: 'red',
+  margin: -10,
+},
+emailAuthContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 25,
+},
+emailAuthInput: {
+  flex: 0.7,
+  height: 40,
+  borderColor: 'gray',
+  borderBottomWidth: 1,
+  paddingHorizontal: 8,
+  marginLeft: 15,
+  marginRight: 10,
+},
+// 이메일 인증, 확인 버튼 스타일
+button: {
+  backgroundColor: '#003497', // 버튼 색상
+  borderRadius: 5, // 테두리 둥글기 정도
+  padding: 9,
+},
+// 회원가입, 가입취소 버튼 나란히 정렬
+buttonContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginHorizontal: 100,
+  marginTop: 10,
+  marginBottom: 20,
+},
+
+//회원가입 버튼
+signupButton: {
+  backgroundColor: '#003497', // 원하는 회원가입 버튼 색상
+  padding: 10,
+  paddingLeft: 20,
+  paddingRight: 20,
+},
+//가입취소 버튼
+cancelButton: {
+  backgroundColor: '#A9B8D4', // 원하는 가입취소 버튼 색상
+  padding: 9,
+  paddingLeft: 20,
+  paddingRight: 20,
+},
+//학과, 학년 피커
+pickerContainer: {
+  flexDirection: 'row', // 부모 컨테이너의 방향을 '가로'로 설정
+  justifyContent: 'space-between', // 선택사항: 피커 간의 간격을 조절하려면 추가
+  marginHorizontal: 3, // 선택사항: 필요한 경우 여백 추가
+  marginTop: -10,
+  marginBottom: -10,
+},
+//학과
+majorPickerWrapper: {
+  flex: 2, // 학과 피커의 flex 값을 조절하여 넓이를 조절
+  marginRight: 5,
+},
+//학년
+gradePickerWrapper: {
+  flex: 1, // 학년 피커의 flex 값을 조절하여 넓이를 조절
+},
+picker: {
+  height: 50, // 필요에 따라 높이 조절
+  width: '100%', // 부모의 전체 너비를 차지하도록 설정
+},
   });
 
   export default Sign;

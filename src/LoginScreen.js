@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Alert,View, TextInput, TouchableOpacity, StyleSheet, Text, Image, Keyboard } from 'react-native';
-import { saveUserInfoAll, loadUserInfo, logOut, loadUserInfoAll } from './Common';
+import { saveUserInfoAll, logOut, loadUserInfoAll } from './Common';
 
 const LoginScreen = ({navigation}) => {
   const [id, setId] = useState('');
@@ -12,7 +12,6 @@ const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [foundId, setFoundId] = useState(null);
   const [emailNotFound, setEmailNotFound] = useState(false);
-
 
   useEffect(()=>{
     if(isLoggedIn=='0'||isLoggedIn===(null)){
@@ -85,7 +84,7 @@ const LoginScreen = ({navigation}) => {
           iscert:json.member.iscert,
           isAdmin:json.member.isAdmin,
           grade:json.member.grade,
-          isLogin:'1',
+          profile:json.member.profile,
         };
         console.log('유저정보확인:',userInfo),
         await saveUserInfoAll(userInfo);
@@ -121,7 +120,7 @@ const LoginScreen = ({navigation}) => {
       ):(
         <>
       <Image
-        source={require('../image/Logo.png')} // Replace with the actual image file path
+        source={require('../image/Logo_original.png')} // Replace with the actual image file path
         style={styles.image}
         resizeMode='contain'
       />

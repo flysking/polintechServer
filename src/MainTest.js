@@ -1,18 +1,21 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
 import {ScrollView,Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import moment from 'moment';
 import DrawerModal from './DrawerModal';
 import ImageButton from './ImageButton';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 function MainTest ({navigation,route}) {
     const {userInfo}=route.params;
-    console.log(userInfo.id);
+    console.log(userInfo.id);  
     const [boards, setBoards] = useState([]);
     const [notices, setNotices]=useState([]);
     const [category,setCategory]=useState('전체');
     const [modalVisible,setModalVisible]=useState(false);
+
     useEffect(() => {
         const fetchBoards = async () => {
+            //선택한 카테고리에 해당하는 게시글을 불러옵니다.
         if(category==='전체'){
             console.log('전체 게시글 불러오기');
             try {
@@ -77,7 +80,7 @@ function MainTest ({navigation,route}) {
                 <View>
                     <Image
                         source={require('../image/Logo.png')}
-                        style={{width:100,height:35}}
+                        style={{width:80,height:30}}
                     />
                 </View>
             ),
@@ -97,6 +100,10 @@ function MainTest ({navigation,route}) {
     const handleNoticeList=()=>{
         navigation.navigate('TabBottomMain',{category:'학사일정'});
     };
+    const formatDate = (dateString) => {
+        return moment(dateString).format('YYYY-MM-DD');
+      };
+
     const top5Board = boards.slice(0,4);
     const top5Notice= notices.slice(0,4);
 
@@ -113,18 +120,20 @@ function MainTest ({navigation,route}) {
 
     return(
         <SafeAreaView style={styles.container}>
-            <ScrollView style={{display:'flex', width:'100%',height:'100%'}}>
+            <ScrollView style={{display:'flex', width:'100%',height:'100%',}}>
             <View style={styles.topMenu}>
                 <TouchableOpacity onPress={()=>setCategory('전체')}
                 style={styles.category}
                 >
-                    <Text>전체</Text>
+                    <Text style={{color:'#000000'}}>전체</Text>
                 </TouchableOpacity >
+                    <Text style={{color:'gray',fontSize:15}}>|</Text>
                 <TouchableOpacity onPress={()=>setCategory('학과게시판')}>
-                    <Text>학과</Text>
+                    <Text style={{color:'#000000'}}>학과</Text>
                 </TouchableOpacity>
+                    <Text style={{color:'gray',fontSize:15}}>|</Text>
                 <TouchableOpacity onPress={()=>setCategory('익명게시판')}>
-                    <Text>익명</Text>
+                    <Text style={{color:'#000000'}}>익명</Text>
                 </TouchableOpacity>
             </View>
 
@@ -136,8 +145,13 @@ function MainTest ({navigation,route}) {
             ...shadowStyle, //그림자 효과 추가
             }}
         />
-            <View>
-                <Text style={{ marginTop:20, marginLeft:25, fontSize:20, color:'#003497', fontWeight:'bold' }}>{category} 게시글 목록</Text>
+            <View style={styles.containerWrap}>
+                <View style={styles.wrapTop}>
+                    <Text style={{ marginTop:15, marginLeft:10, fontSize:18, color:'#003497', fontWeight:'bold' }}>{category}</Text>
+                    <TouchableOpacity onPress={handleBoardList}>
+                        <Icon name="arrow-forward-ios" style={{ marginTop:15,}}color={'#000000'} size={18}/>
+                    </TouchableOpacity>
+                </View> 
                 <View style={styles.listContainer}>
                     <FlatList 
                         data={top5Board}
@@ -145,30 +159,24 @@ function MainTest ({navigation,route}) {
                         scrollEnabled={false}
                         renderItem={({item}) => (
                     <View style={styles.list}>
-                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { boardId: item.board_id })} style={{flexDirection:'row'}}>
-                                <Text style={{fontSize: 17, fontWeight: 'bold' }}>{item.board_title}</Text>
-                                <Text style={{color:'black',marginLeft:5}}>[{item.board_hits}]</Text>
+                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { boardId: item.board_id })} style={{flexDirection:'column'}}>
+                                <Text style={{ color:'#000000', fontSize: 14 , fontWeight: 'bold' }}>{item.board_title}</Text>
+                                <Text style={{fontSize:12,color:'gray',marginTop:5,}}>{item.member_name}  {formatDate(item.board_postdate)}</Text>
                         </TouchableOpacity>
                     </View>
                     )}
                     />
-                {/* 더보기 버튼 추가 */}
-                    <TouchableOpacity
-                    onPress={handleBoardList}
-                    style={{
-                        alignItems: 'center',
-                        padding: 10,
-                        marginTop: 10,
-                    }}
-                    >
-                    <Text style={{ color: '#003497', fontWeight: 'bold' }}>더보기</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
 
 
-            <View>
-                <Text style={{ marginTop:20, marginLeft:25, fontSize:20, color:'#003497', fontWeight:'bold' }}>학사 일정</Text>
+            <View style={styles.containerWrap}>
+                <View style={styles.wrapTop}>
+                    <Text style={{ marginTop:15, marginLeft:10, fontSize:18, color:'#003497', fontWeight:'bold' }}>학사 일정</Text>
+                    <TouchableOpacity onPress={handleNoticeList}>
+                        <Icon name="arrow-forward-ios" style={{ marginTop:15,}}color={'#000000'} size={18}/>
+                    </TouchableOpacity>
+                </View> 
                 <View style={styles.listContainer2}>
                 <FlatList 
                         data={top5Notice}
@@ -176,27 +184,22 @@ function MainTest ({navigation,route}) {
                         scrollEnabled={false}
                         renderItem={({item}) => (
                     <View style={styles.list}>
-                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { boardId: item.board_id })} style={{flexDirection:'row'}}>
-                                <Text style={{fontSize: 17, fontWeight: 'bold' }}>{item.board_title}</Text>
-                                <Text style={{color:'black',marginLeft:5}}>[{item.board_hits}]</Text>
+                        <TouchableOpacity onPress={()=>navigation.navigate('BoardDetail', { boardId: item.board_id })} style={{flexDirection:'column'}}>
+                            <Text style={{ color:'#000000', fontSize: 14 , fontWeight: 'bold' }}>{item.board_title}</Text>
+                            <Text style={{fontSize:12,color:'gray',marginTop:5,}}>{item.member_name}  {formatDate(item.board_postdate)}</Text>
                         </TouchableOpacity>
                     </View>
                     )}
                     />
-                {/* 더보기 버튼 추가 */}
-                <TouchableOpacity
-                    onPress={handleNoticeList}
-                    style={{
-                        alignItems: 'center',
-                        padding: 10,
-                        marginTop: 10,
-                    }}
-                    >
-                    <Text style={{ color: '#003497', fontWeight: 'bold' }}>더보기</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.bottom}>
+                <View style={{marginBottom:40,}}>
+                    <Text style={{color:'gray',fontSize:14,textAlign:'center'}}>
+                        고객 상담 접수 : 카카오톡 @Polintech
+                    </Text>
+                </View>
+
                 <Image
                     source={require('../image/KopoLogo.png')}
                     style={{width:150,height:45}}
@@ -206,11 +209,12 @@ function MainTest ({navigation,route}) {
                 © Copyright 2023 by Team Polintech{'\n'}
                 All rights reserved.
                 </Text>
+
             </View>
             </ScrollView>
             <ImageButton
                     onPress={() => {
-                    navigation.navigate('Write');
+                    navigation.navigate('CreateBoard');
                     }}
                     source={require('../image/write.png')}
                 />
@@ -231,6 +235,7 @@ function MainTest ({navigation,route}) {
 };
 const styles=StyleSheet.create({
     bottom:{
+        marginTop:40,
         marginBottom:30,
         alignItems:'center'
     },
@@ -246,10 +251,12 @@ const styles=StyleSheet.create({
         
     },
     container:{
+        backgroundColor:'#e8e8e8',
         justifyContent: 'center',
         alignItems: 'center',
     },
     topMenu:{
+        backgroundColor:'#ffffff',
         flexDirection:'row',
         justifyContent:'space-between',
         width:'100%',
@@ -262,31 +269,44 @@ const styles=StyleSheet.create({
     category:{
         fontSize:15,
     },
-    listContainer:{
+    containerWrap:{
         marginTop:20,
+        backgroundColor:'#ffffff',
+        borderWidth:1.5,
+        borderColor: '#ffffff', 
+        borderRadius: 10,
         marginHorizontal:20,
-         borderWidth: 1.5, 
-         borderColor: '#003497', 
-         borderRadius: 10,
-         height:230,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },  //이동거리
+        shadowOpacity: 0.8, //투명도
+        shadowRadius: 4,    //흐린 정도
+        //안드로이드
+        elevation: 6,
+
+    },
+    wrapTop:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        width:'100%',
+        paddingHorizontal:15,
+
+    },
+    listContainer:{
+        marginHorizontal:10,
+         height:265,
+
     },
     listContainer2:{
-        marginTop:20,
-        marginHorizontal:20,
-        borderWidth: 1.5, 
-        borderColor: '#003497', 
-        borderRadius: 10,
-        height:230,
-        marginBottom:40,
+        marginHorizontal:10,
+        height:200,
     },
     list:{
         flex:1,
         width:'90%',
         paddingHorizontal:5,
         paddingVertical:10,
+        marginTop:4,
         marginLeft:10,
-        borderTopColor:'#D8D8D8',
-        borderTopWidth:1,
         borderBottomColor:'#D8D8D8',
         borderBottomWidth:1,
     },
@@ -310,15 +330,6 @@ const styles=StyleSheet.create({
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.4)', // 어두운 배경
-      },
-      overlayBox: {
-        position:'absolute',
-        width: 256,
-        height: Dimensions.get('window').height,
-        right:0,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        //alignItems: 'center',
       },
 });
 export default MainTest;

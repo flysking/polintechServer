@@ -142,19 +142,22 @@ const CreateBoard = ({navigation}) => {
 
   const createNewBoard = async () => {
     try {
-      const res = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/CreateBoard', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const res = await fetch(
+        'https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/CreateBoard',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            board_title: title,
+            board_content: content,
+            board_mid: mid,
+            board_category: category,
+            board_subcategory: categorySub,
+          }),
         },
-        body: JSON.stringify({
-          board_title: title,
-          board_content: content,
-          board_mid: mid,
-          board_category: category,
-          board_subcategory: categorySub,
-        }),
-      });
+      );
 
       const json = await res.json();
       if (json.success) {
@@ -176,59 +179,16 @@ const CreateBoard = ({navigation}) => {
       }
     } catch (error) {
       console.log(error);
-    }
+    } 
   };
   useEffect(() => {
     let updatedOptions = ['카테고리 선택'];
     let majorString;
-    console.log(major); 
-    switch (major) {
-      case 1:
-        majorString = 'AI융합소프트웨어과';
-        break;
-      case 2:
-        majorString = 'AI정보통신';
-        break;
-      case 3:
-        majorString = '시스템금형';
-        break;
-      case 4:
-        majorString = '지능기계시스템';
-        break;
-      case 5:
-        majorString = '산업설비자동화';
-        break;
-      case 6:
-        majorString = '스마트전기자동차';
-        break;
-      case 7:
-        majorString = '전기에너지시스템';
-        break;
-      case 8:
-        majorString = '메카트로닉스';
-        break;
-      case 9:
-        majorString = '방송미디어';
-        break;
-      case 10:
-        majorString = '산업디자인';
-        break;
-      case 11:
-        majorString = '스마트재료';
-        break;
-      case 12:
-        majorString = '건축설계';
-        break;
-      case 13:
-        majorString = '디지털융합';
-        break;
+    console.log('카테고리 선택 학과 : ', major);
 
-      default:
-        return;
-    }
-
-    if (!updatedOptions.includes(majorString)) {
-      updatedOptions.push(majorString);
+    if (!updatedOptions.includes(major)) {
+      updatedOptions.push(major);
+      setCategorySub_Options1(major); // 상태를 업데이트합니다.
     }
     // console.log('respense 출력 : ', response); // response 출력
     console.log('board_id 출력 : ', boardid); //boardid 출력
@@ -256,76 +216,86 @@ const CreateBoard = ({navigation}) => {
 
   return (
     <ScrollView style={styles.scroll}>
-    <SafeAreaView style={styles.block}>
-      <View>
-        <TextInput value={title} onChangeText={setTitle} placeholder={'제목'} />
-        <TextInput
-          value={content}
-          onChangeText={setContent}
-          placeholder={'내용'}
-          multiline
-        />
-        <TextInput
-          value={mid}
-          onChangeText={setMid}
-          placeholder={'작성자 ID'}
-          editable={false}
-        />
-        <Pressable onPress={onSelectImage}>
-          <Image
-            style={styles.imageArea}
-            source={
-              response
-                ? {uri: response?.assets[0]?.uri}
-                : {
-                    uri: 'https://storage.googleapis.com/polintech_image/AppImage/user.png',
-                  }
-            }
-          />
-        </Pressable>
-        {/* <Button title={'이미지 등록'} onPress={handleBoardImage} /> */}
-        <Picker
-          selectedValue={selectCategoryOption}
-          onValueChange={categoryValue => {
-            setSelectCategoryOption(categoryValue);
-            if (categoryValue === selectCategoryOption) {
-              setCategory('');
-            } else {
-              setCategory(categoryValue);
-            }
-          }}>
-          {categoryOptions.map((option, index) => (
-            <Picker.Item key={index} label={option} value={option} />
-          ))}
-        </Picker>
-
-        <Picker
-          selectedValue={selectCategorySubOption}
-          onValueChange={categorySubValue => {
-            setSelectCategorySubOption(categorySubValue);
-            if (categorySubValue === selectCategorySubOption) {
-              setCategorySub('');
-            } else {
-              setCategorySub(categorySubValue);
-            }
-          }}>
-          {category === '학과게시판' &&
-            categorySub_Options1.map((option, index) => (
+      <SafeAreaView style={styles.block}>
+      <View style={styles.selectBoard}>
+      <Text style={styles.selectBoardText}>게시판 선택</Text>
+      <Picker
+            selectedValue={selectCategoryOption}
+            onValueChange={categoryValue => {
+              setSelectCategoryOption(categoryValue);
+              if (categoryValue === selectCategoryOption) {
+                setCategory('');
+              } else {
+                setCategory(categoryValue);
+              }
+            }}>
+            {categoryOptions.map((option, index) => (
               <Picker.Item key={index} label={option} value={option} />
             ))}
-          {category === '전체게시판' &&
-            categorySub_Options2.map((option, index) => (
-              <Picker.Item key={index} label={option} value={option} />
-            ))}
-          {category === '자유게시판' &&
-            categorySub_Options3.map((option, index) => (
-              <Picker.Item key={index} label={option} value={option} />
-            ))}
-        </Picker>
-
-        <Button title={'게시글 생성'} onPress={createNewBoard} />
+          </Picker>
+          <Picker
+            selectedValue={selectCategorySubOption}
+            onValueChange={categorySubValue => {
+              setSelectCategorySubOption(categorySubValue);
+              if (categorySubValue === selectCategorySubOption) {
+                setCategorySub('');
+              } else {
+                setCategorySub(categorySubValue);
+              }
+            }}>
+            {category === '학과게시판' &&
+              categorySub_Options1.map((option, index) => (
+                <Picker.Item key={index} label={option} value={option} />
+              ))}
+            {category === '전체게시판' &&
+              categorySub_Options2.map((option, index) => (
+                <Picker.Item key={index} label={option} value={option} />
+              ))}
+            {category === '자유게시판' &&
+              categorySub_Options3.map((option, index) => (
+                <Picker.Item key={index} label={option} value={option} />
+              ))}
+          </Picker>
       </View>
-    </SafeAreaView>
+
+        <View>
+          <TextInput
+            value={title}
+            onChangeText={setTitle}
+            placeholder={'제목'}
+          />
+          <TextInput
+            value={content}
+            onChangeText={setContent}
+            placeholder={'내용'}
+            multiline
+          />
+          <TextInput
+            value={mid}
+            onChangeText={setMid}
+            placeholder={'작성자 ID'}
+            editable={false}
+          />
+          <Pressable onPress={onSelectImage}>
+            <Image
+              style={styles.imageArea}
+              source={
+                response
+                  ? {uri: response?.assets[0]?.uri}
+                  : {
+                      uri: 'https://storage.googleapis.com/polintech_image/AppImage/user.png',
+                    }
+              }
+            />
+          </Pressable>
+          
+
+          <Button title={'게시글 생성'} onPress={createNewBoard} />
+        </View>
+        <View style={styles.confirmArea}>
+          
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -335,10 +305,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#000000',
   },
-  scroll:{
-    display:'flex',
-    width:'100%',
-    height:'100%',
+  scroll: {
+    flex:1,
+    width: '100%',
+    height: '100%',
+    backgroundColor:'#ffffff',
   },
   block: {
     alignItems: 'center',

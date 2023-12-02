@@ -80,7 +80,7 @@ export const loadUserInfoAll = async () => {
       iscert: 'iscert',
       isAdmin: 'isAdmin',
       grade: 'grade',
-      isLogin:'isLogin',
+      profile:'profile',
       //majorname:'majorname',
     });
     const data = {};
@@ -155,7 +155,7 @@ export const logOut = async () =>
     iscert: 'iscert',
     isAdmin: 'isAdmin',
     grade: 'grade',
-    isLogin:'isLogin',
+    profile:'profile',
   });
   try {
     for (const key of keys) {
