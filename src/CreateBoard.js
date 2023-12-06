@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
   ScrollView,
   Button,
@@ -12,10 +12,12 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
+  KeyboardAvoidingView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Picker} from '@react-native-picker/picker';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {saveLoginInfoAll, loadUserInfoAll, logOut} from './Common';
+import { loadUserInfoAll, } from './Common';
 const CreateBoard = ({navigation}) => {
   const [title, setTitle] = useState('');
   const [boardid, setBoardId] = useState('');
@@ -24,8 +26,7 @@ const CreateBoard = ({navigation}) => {
   const [category, setCategory] = useState('');
   const [id, setId] = useState('');
   const [name, setName] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(null);
   const [major, setMajor] = useState('');
   const [categorySub, setCategorySub] = useState('');
   const [response, setResponse] = useState(null);
@@ -40,11 +41,19 @@ const CreateBoard = ({navigation}) => {
     '전체게시판',
     '자유게시판',
   ];
+  const categoryAdmin = [
+    '학사일정'
+  ];
+  const categorySubNotice=[
+    '공지',
+  ];
   const [categorySub_Options1, setCategorySub_Options1] = useState([
     '카테고리 선택',
   ]);
-  const categorySub_Options2 = ['자격증', '동아리', '공지'];
+  //작성자 isAdmin이 1이면 공지가 추가되도록.
+  const categorySub_Options2 = ['자격증', '동아리','질문'];
   const categorySub_Options3 = ['익명게시판'];
+  const categorySub_Options4=['학사일정','식단표', '학과공지'];
   useEffect(() => {
     const fetchData = async () => {
       const savedData = await loadUserInfoAll();
@@ -53,16 +62,29 @@ const CreateBoard = ({navigation}) => {
         setId(savedData.id);
         setMid(savedData.id);
         setName(savedData.name);
-        setIsAdmin(savedData.isadmin);
-        setIsLoggedIn(true); // 저장된 로그인 데이터가 있으면 로그인 상태로 설정
+        setIsAdmin(savedData.isAdmin);
         setMajor(savedData.major);
         setCategorySub_Options1(savedData.major);
         console.log('게시글 생성 페이지 UserInfo :', savedData);
       }
     };
-
     fetchData();
   }, []);
+
+  useLayoutEffect(() => {
+    //상단 탭 바 디자인을 변경하기 위해 사용합니다.
+    navigation.setOptions({
+        title:'게시글 작성',
+        headerStyle: {
+            backgroundColor: '#003497',
+        },
+        headerTitleStyle:{
+          color:'#ffffff',
+        },
+        headerTintColor: '#ffffff',
+        
+    });
+}, [navigation]);
 
   const handleBoardImage = async boardId => {
     const formData = new FormData();
@@ -171,7 +193,7 @@ const CreateBoard = ({navigation}) => {
           handleBoardImage(json.board.board_id);
         } else {
           Alert.alert('게시글 생성 성공');
-          navigation.pop();
+          navigation.goBack();
         }
       } else {
         console.log('게시글 생성 실패:', json.error);
@@ -215,88 +237,111 @@ const CreateBoard = ({navigation}) => {
   };
 
   return (
-    <ScrollView style={styles.scroll}>
-      <SafeAreaView style={styles.block}>
-      <View style={styles.selectBoard}>
-      <Text style={styles.selectBoardText}>게시판 선택</Text>
-      <Picker
-            selectedValue={selectCategoryOption}
-            onValueChange={categoryValue => {
-              setSelectCategoryOption(categoryValue);
-              if (categoryValue === selectCategoryOption) {
-                setCategory('');
-              } else {
-                setCategory(categoryValue);
-              }
-            }}>
-            {categoryOptions.map((option, index) => (
-              <Picker.Item key={index} label={option} value={option} />
-            ))}
-          </Picker>
-          <Picker
-            selectedValue={selectCategorySubOption}
-            onValueChange={categorySubValue => {
-              setSelectCategorySubOption(categorySubValue);
-              if (categorySubValue === selectCategorySubOption) {
-                setCategorySub('');
-              } else {
-                setCategorySub(categorySubValue);
-              }
-            }}>
-            {category === '학과게시판' &&
-              categorySub_Options1.map((option, index) => (
-                <Picker.Item key={index} label={option} value={option} />
-              ))}
-            {category === '전체게시판' &&
-              categorySub_Options2.map((option, index) => (
-                <Picker.Item key={index} label={option} value={option} />
-              ))}
-            {category === '자유게시판' &&
-              categorySub_Options3.map((option, index) => (
-                <Picker.Item key={index} label={option} value={option} />
-              ))}
-          </Picker>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.selectBoard}>
+          <Text style={styles.titleText}>게시판</Text>
+          <View style={styles.categoryWrapper}>
+            <Picker
+              selectedValue={selectCategoryOption}
+              onValueChange={categoryValue => {
+                setSelectCategoryOption(categoryValue);
+                if (categoryValue === selectCategoryOption) {
+                  setCategory('');
+                } else {
+                  setCategory(categoryValue);
+                }
+              }}>
 
-        <View>
-          <TextInput
-            value={title}
-            onChangeText={setTitle}
-            placeholder={'제목'}
-          />
-          <TextInput
+              {categoryOptions.map((option, index) => (
+                <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+              ))}
+              {isAdmin===1 && 
+                categoryAdmin.map((option,index)=>(
+                <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+              ))}
+            </Picker>
+          </View>
+          {/*<Text style={//styles.selectBoardText}>게시판 선택</Text>*/}
+          <View style={styles.subcategoryWrapper}>
+            <Picker
+              selectedValue={selectCategorySubOption}
+              onValueChange={categorySubValue => {
+                setSelectCategorySubOption(categorySubValue);
+                if (categorySubValue === selectCategorySubOption) {
+                  setCategorySub('');
+                } else {
+                  setCategorySub(categorySubValue);
+                }
+              }}>
+              {category === '학과게시판' &&
+                categorySub_Options1.map((option, index) => (
+                  <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+                ))}
+              {category === '전체게시판' &&
+                categorySub_Options2.map((option, index) => (
+                  <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+                ))}
+              {category === '자유게시판' &&
+                categorySub_Options3.map((option, index) => (
+                  <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+                ))}
+              {category ==='학사일정' && 
+                categorySub_Options4.map((option, index) => (
+                  <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+                ))}
+              {isAdmin===1 &&
+                categorySubNotice.map((option, index)=>(
+                  <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
+                ))
+              }
+            </Picker>
+          </View>
+      </View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>제목</Text>
+        <TextInput
+          style={styles.titleTextInput}
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+          placeholder="제목을 입력하세요."
+          placeholderTextColor="#8B9DBF"
+        />
+      </View>
+      <ScrollView style={{marginBottom:50,}}>
+        <TextInput
+            style={styles.mainTextInput}
             value={content}
-            onChangeText={setContent}
-            placeholder={'내용'}
+            onChangeText={(text) => setContent(text)}
+            placeholder="내용을 입력하세요."
+            placeholderTextColor="#8B9DBF"
             multiline
           />
-          <TextInput
-            value={mid}
-            onChangeText={setMid}
-            placeholder={'작성자 ID'}
-            editable={false}
+      </ScrollView>
+      {/*글 작성, 이미지 등록 폼입니다 */}  
+        <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{position:'absolute',bottom:0, flex: 1, justifyContent: 'center', alignItems: 'center',flexDirection:'row'}}
+        >
+          {response ? (
+          <View style={{position:'absolute',bottom:0,marginBottom:50,backgroundColor:'rgba(0, 0, 0, 0.1)', width:'100%',height:75,}}>
+          <Image
+            style={styles.imageArea}
+            source={
+              {uri: response?.assets[0]?.uri}
+            }
           />
-          <Pressable onPress={onSelectImage}>
-            <Image
-              style={styles.imageArea}
-              source={
-                response
-                  ? {uri: response?.assets[0]?.uri}
-                  : {
-                      uri: 'https://storage.googleapis.com/polintech_image/AppImage/user.png',
-                    }
-              }
-            />
-          </Pressable>
-          
-
-          <Button title={'게시글 생성'} onPress={createNewBoard} />
-        </View>
-        <View style={styles.confirmArea}>
-          
-        </View>
-      </SafeAreaView>
-    </ScrollView>
+          </View>
+          ) : null}
+          <View style={{flexDirection:'row', justifyContent:'space-between',backgroundColor:'gray', padding: 10, width: '100%'}}>
+            <TouchableOpacity onPress={onSelectImage}>
+              <Icon name="image" color={'#ffffff'} size={25}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={createNewBoard}>
+              <Image source={require('../image/save.png')} style={{width:60,height:30,}} resizeMode='contain'/>
+            </TouchableOpacity>
+          </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -318,11 +363,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageArea: {
-    marginTop: 20,
+    position:'absolute',
+    right:0,
+    bottom:0,
+    marginRight:10,
     backgroundColor: '#cdcdcd',
     borderRadius: 10,
-    width: 256,
-    height: 256,
+    width:75,
+    height:75,
   },
   form: {
     marginTop: 16,
@@ -331,7 +379,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '60%',
-    height: 40,
+    height: '100%',
     borderColor: 'gray',
     borderWidth: 1,
     marginVertical: 10,
@@ -388,5 +436,103 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
+  //추가함
+    container: {
+      overflow:'scroll',
+      flex: 1,
+      backgroundColor: 'white',
+    },
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between', // 오른쪽 정렬을 위해 추가
+      padding: 10,
+      borderWidth: 1,         // 테두리 두께
+      borderColor: '#003497',    // 테두리 색상
+      borderTopWidth: 0,     // 상단 테두리 두께 (0으로 설정하여 없애기)
+      borderLeftWidth: 0,    // 좌측 테두리 두께 (0으로 설정하여 없애기)
+      borderRightWidth: 0,   // 우측 테두리 두께 (0으로 설정하여 없애기)
+    },
+    text: {
+      marginLeft: -170, // 왼쪽 마진(게시글 작성)
+      fontSize: 21,
+      fontWeight: 'bold',
+      color: '#003497',
+    },
+    selectBoard: {
+      flexDirection: 'row', // 가로 정렬을 위해 추가
+      width:'100%',
+      height: 50, // topBar와 동일한 높이로 설정
+      justifyContent: 'space-between', // 가로 정렬을 위해 추가
+      alignItems: 'center',
+      paddingLeft: 20, // 왼쪽에 여백 추가
+      // alignItems: 'center',
+      borderWidth: 1,          // 테두리 두께
+      borderColor: '#003497',  // 테두리 색상
+      borderTopWidth: 0,     // 상단 테두리 두께 (0으로 설정하여 없애기)
+      borderLeftWidth: 0,    // 좌측 테두리 두께 (0으로 설정하여 없애기)
+      borderRightWidth: 0,   // 우측 테두리 두께 (0으로 설정하여 없애기)
+    },
+    categoryWrapper:{
+      flex:5,
+    },
+    subcategoryWrapper:{
+      flex:5,
+    },
+    selectBoardText: {
+      fontSize: 16,
+      marginRight: 10,
+      color: '#003497',
+      marginRight: 10,
+    },
+    selectBoardButton: {
+      width:'100%',
+      fontSize:6,
+    },
+    selectBoardImage: {
+      width: 25,
+      height: 25,
+    },
+    pickerItem:{
+      fontSize:13, 
+    },
+    titleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingLeft: 20, // 왼쪽에 여백 추가
+      borderWidth: 1,         // 테두리 두께
+      borderColor: '#003497',  // 테두리 색상
+      borderTopWidth: 0,     // 상단 테두리 두께 (0으로 설정하여 없애기)
+      borderLeftWidth: 0,    // 좌측 테두리 두께 (0으로 설정하여 없애기)
+      borderRightWidth: 0,   // 우측 테두리 두께 (0으로 설정하여 없애기)
+    },
+    titleText: {
+      color: '#003497',
+      fontSize: 16,
+      marginRight: 10, // 제목 텍스트와 입력란 사이에 간격 추가
+    },
+    titleTextInput: {
+      flex: 1, // 입력란이 화면 전체 가로로 확장
+      paddingTop: 12,
+      paddingLeft: 1,
+      color: '#313337',
+    },
+    mainTextInput: {
+      paddingLeft: 20,
+      color: '#313337',
+      height:'100%',
+    },
+    imageButton: {
+      padding: 1,
+    },
+    image: {
+      width: 25,
+      height: 25,
+    },
+    saveImage: {
+      width: 60,
+      height: 30,
+    },
 });
 export default CreateBoard;

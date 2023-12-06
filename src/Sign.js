@@ -27,13 +27,46 @@ function Sign({navigation}){
   const [birth, setBirth] = useState(''); //생년월일
   const [gender, setGender] = useState(''); //성별
   const [emailDomain, setEmailDomain] = useState('');
-  const [existingUsers, setExistingUsers] = useState([]); //학번 중복 검사
+  //const [existingUsers, setExistingUsers] = useState([]); //학번 중복 검사
   const [selectedEmailOption, setSelectedEmailOption] = useState('naver.com'); // 이메일 선택 옵션
   const emailOptions = ['직접입력', 'naver.com', 'gmail.com', 'daum.net']; // 이메일 옵션 목록
   const [grade, setGrade] = useState(null); //학년
   const [authCheck, setAuthCheck] = useState(''); //인증번호 확인
   const passwordRegex =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,20}$/; //비밀번호 정규식 숫자, 영문 대,소문자, 특수문자 포함 6~20자 이내
+
+    useEffect(() => {
+        if (id === '') {
+          setIdMessage('');
+        } else {
+          checkIfIdExists(id);
+        }
+      }, [id]);
+
+      const checkIfIdExists = async (id) => {
+        console.log('체크 아이디 호출');
+        try {
+          const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/findId', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id }),
+          });
+    
+          const data = await response.json();
+    
+          if (data.success) {
+            setIdMessage('이미 존재하는 학번입니다.');
+          } else {
+            setIdMessage('사용 가능한 학번입니다.');
+          }
+        } catch (error) {
+          console.error('Error checking ID:', error);
+        }
+      };
+    
+    
     const signuser = async () => {
       try {
         const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/Sign', {
@@ -93,19 +126,7 @@ function Sign({navigation}){
         console.error(error);
       }
     };
-    useEffect(() => {
-      if (id === '') {
-        setIdMessage('');
-      } else {
-        const isIdTaken = existingUsers.some(user => user.id === id);
-        if (isIdTaken) {
-          setIdMessage('이미 존재하는 학번입니다.');
-        } else {
-          setIdMessage('사용 가능한 학번입니다.');
-        }
-      }
-    }, [id]);
-  
+
     const handleCancel = () => {
       navigation.navigate('LoginScreen');
       
@@ -159,7 +180,7 @@ function Sign({navigation}){
       }
     };
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{backgroundColor:'#ffffff'}}>
       <ScrollView>
       <Text style={styles.headerText}>회원가입</Text>
       <Text style={styles.labelText}>학번</Text>
@@ -169,7 +190,7 @@ function Sign({navigation}){
         onChangeText={setId}
         placeholder="학번"
       />
-      <Text>{idMessage}</Text>
+      <Text style={{marginLeft:20,}}>{idMessage}</Text>
       <Text style={styles.labelText}>비밀번호</Text>
       <TextInput
         style={styles.input}
@@ -474,11 +495,12 @@ emailOptionPicker: {
 },
 passwordMessage: {
   color: 'red',
-  margin: -10,
+  marginLeft:20,
+  
 },
 nickMessage: {
   color: 'red',
-  margin: -10,
+  marginLeft:20,
 },
 emailAuthContainer: {
   flexDirection: 'row',

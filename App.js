@@ -1,6 +1,6 @@
-import React from 'react';
+import {React,useEffect} from 'react';
 import Loading from './src/Loading';
-import MainTest from './src/MainTest';
+import Main from './src/Main';
 import CheckLogin from './src/CheckLogin';
 import BoardDetail from './src/BoardDetail';
 import LoginScreen from './src/LoginScreen';
@@ -55,7 +55,7 @@ function App(){
                 options={{title:"비밀번호 복구"}}/>
                 <RootStack.Screen name="PwUpdate" component={PwUpdate} 
                 options={{headerShown:false}}/>
-                <RootStack.Screen name="MainTest" component={MainTest} 
+                <RootStack.Screen name="MainTest" component={Main} 
                 />
                 <RootStack.Screen name="MyPage" component={MyPage} />
                 <RootStack.Screen name="StudentIDC" component={StudentIDC}
@@ -68,18 +68,17 @@ function App(){
                 options={{title:"게시글 수정하기"}}
                 />
                 <RootStack.Screen name="ReplyAdd" component={ReplyAdd}
-                options={{title:"댓글 추가"}}/>
+                options={{title:"답글 추가"}}/>
                 <RootStack.Screen name="ReplyEdit" component={ReplyEdit}
-                options={{title:"댓글 수정"}}
+                options={{title:"답글 수정"}}
                 />
                 <RootStack.Screen name="CommentEdit" component={CommentEdit}
-                options={{title:"게시글 상세보기"}}
+                options={{title:"댓글 수정"}}
                 />
                 <RootStack.Screen name="TabBottomMain" component={TabBottomMain}
                 options={{headerShown:false}}
                 />  
                 <RootStack.Screen name="CreateBoard" component={CreateBoard} 
-                options={{title:"게시글 작성"}}
                 /> 
             </RootStack.Navigator>
         </NavigationContainer>

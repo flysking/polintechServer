@@ -23,8 +23,9 @@ function TabSearch({navigation}) {
   useLayoutEffect(() => {
     navigation.setOptions({
       //tabBarLabel: () => null,
+      title:'검색',
       headerStyle: {
-        backgroundColor: 'red',
+        backgroundColor: '#003497',
       },
       headerTintColor: 'white',
     });
@@ -90,6 +91,7 @@ function TabSearch({navigation}) {
           <Text style={styles.searchButtonText}>검색</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.listContainer}>
       {boards && boards.length > 0 ? (
         <FlatList
           data={boards}
@@ -103,7 +105,7 @@ function TabSearch({navigation}) {
                 }>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{color: 'black', fontSize: 20}}>
-                    {item.board_title} [{item.board_hits}]
+                    {item.board_title}
                   </Text>
                 </View>
                 <View style={{flexDirection: 'row'}}>
@@ -119,6 +121,7 @@ function TabSearch({navigation}) {
       ) : (
         <Text>검색된 게시글이 없습니다.</Text>
       )}
+      </View>
     </View>
   );
 }
@@ -136,6 +139,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  listContainer:{
+    width:'100%',
+    paddingHorizontal:10,
+  },
   picker: {
     flex: 1,
     borderWidth: 1,
@@ -151,7 +158,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   searchButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#003497',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -161,10 +168,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   block: {
-    flex: 1,
+    width:'100%',
   },
   list: {
-    width: '90%',
+    width: '100%',
     paddingHorizontal: 5,
     paddingVertical: 10,
     marginLeft: 10,

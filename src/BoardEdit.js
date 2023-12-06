@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useLayoutEffect} from 'react';
 import {
   Button,
   TextInput,
@@ -26,6 +26,21 @@ const BoardEdit = ({route, navigation}) => {
   const [title, setTitle] = useState(oTitle);
   const [content, setContent] = useState(oContent);
   const [response, setResponse] = useState(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+        headerTitleStyle: {
+          color: '#ffffff', // 헤더 제목의 색상
+        },
+        headerTintColor: '#ffffff',
+        headerStyle: {
+            backgroundColor: '#003497',
+        },
+    });
+  }, [navigation]);
+  
+
+
   const updateBoard = async () => {
     try {
       const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/EditBoard`, {
@@ -144,8 +159,8 @@ const BoardEdit = ({route, navigation}) => {
     console.log('board_id 출력 : ', boardId); //boardid 출력
   }, [title, content, response, boardId]);
   return (
-    <View style={{padding: 20}}>
-      <Pressable onPress={onSelectImage}>
+    <View style={{padding: 20,}}>
+      <Pressable onPress={onSelectImage} style={{alignItems:'center'}}>
         {isImage ? (
           <Image
             style={styles.imageArea}

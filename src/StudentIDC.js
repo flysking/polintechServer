@@ -47,16 +47,24 @@ const StudentIDC=({navigation,route})=>{
       getIdc();
     },[]);
 
-    useEffect(()=>{
-      const searchImg=async()=>{
-        //이미지 불러오는 코드 만들어야함.
-
-      }
-    },[idcInfo]);
-
-    useEffect(() => {
-      console.log(idcInfo);
-    }, [idcInfo]);
+      useEffect(()=>{
+        const searchImg=async()=>{
+          try{
+            const member_id=userInfo.id;
+            const res= await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/ReturnIdcImage/${member_id}`);
+            const data=await res.json();
+            const imageName=data.imageData.image_name; 
+            console.log('이미지 이름',imageName);
+            if(data.success){
+              setImageName(imageName);
+            }
+          }catch(error){
+            console.log(error);
+  
+        }
+      };
+      searchImg();
+      },[idcInfo]);
 
     const onSelectImage=()=>{
       launchImageLibrary({
@@ -98,7 +106,7 @@ const StudentIDC=({navigation,route})=>{
             const data={
               member_id:id,
               image_category:'학생증',
-              image_name:response?.assets[0]?.fileName,
+              image_name:id+'학생증'+response?.assets[0]?.fileName,
             }
             const toDB=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadToDB',{
               method:'POST',
@@ -223,7 +231,7 @@ const StudentIDC=({navigation,route})=>{
                   style={styles.imageArea}
                   source={
                     response?{uri:response?.assets[0]?.uri}:
-                    { uri:`https://storage.googleapis.com/polintech_image/AppImage/user.png`}}
+                    { uri:`https://storage.googleapis.com/polintech_image/ServerImage/${imgName}`}}
                 />
                 <View style={{alignContent:'center', width:'80%',marginTop:10}}>
                   <Text style={{fontSize:20,textAlign:'left', color:'#000000', fontWeight:'bold'}}>{idcInfo.member_name}</Text>
@@ -336,7 +344,7 @@ const styles=StyleSheet.create({
     width:300,
     height:512,
     alignItems:'center',
-    borderWidth:3,
+    borderWidth:2,
     borderColor:'#000000',
     borderRadius:15,
   }

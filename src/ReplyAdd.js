@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {View, TextInput, Button, Alert, Text} from 'react-native';
 
 const ReplyAdd = ({route, navigation}) => {
@@ -12,28 +12,19 @@ const ReplyAdd = ({route, navigation}) => {
   const [boardId, setBoardId] = useState(board_id);
   const [replyContent, setReplyContent] = useState('');
 
-  //   const DeleteComment = async () => {
-  //     //댓글 삭제
-  //     try {
-  //       console.log(comment_id);
-  //       const response = await fetch(
-  //         `http://10.0.2.2:3000/DeleteComment/${comment_id}`,
-  //         {
-  //           method: 'DELETE', // DELETE 메서드 사용
-  //         },
-  //       );
-  //       const json = await response.json();
-  //       if (json.success) {
-  //         console.log('댓글 삭제 성공');
-  //         navigation.navigate('Login'); // 현재 화면에서 로그인으로 이동
-  //       } else {
-  //         console.log('게시글 삭제 실패:', json.error);
-  //       }
-  //     } catch (error) {
-  //       console.log('게시글 삭제 중 오류 발생:', error);
-  //     }
-  //   };
-  // 댓글 저장 함수
+  useLayoutEffect(() => {
+    navigation.setOptions({
+        headerTitleStyle: {
+          color: '#ffffff', // 헤더 제목의 색상
+        },
+        headerTintColor: '#ffffff',
+        headerStyle: {
+            backgroundColor: '#003497',
+        },
+    });
+  }, [navigation]);
+
+  // 답글 저장 함수
   const handleReply = () => {
     fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/ReplyAdd`, {
       method: 'POST',

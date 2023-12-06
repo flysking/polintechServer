@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {View, TextInput, Button, Alert, Text} from 'react-native';
 
 const ReplyEdit = ({route, navigation}) => {
@@ -12,7 +12,17 @@ const ReplyEdit = ({route, navigation}) => {
   const [replyMid, setReplyMid] = useState(reply_mid);
   const [replyCid, setReplyCid] = useState(reply_cid);
   const [replyContent, setReplyContent] = useState(reply_content);
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+        headerTitleStyle: {
+          color: '#ffffff', // 헤더 제목의 색상
+        },
+        headerTintColor: '#ffffff',
+        headerStyle: {
+            backgroundColor: '#003497',
+        },
+    });
+  }, [navigation]);
   const updateReply = async () => {
     //답글 수정
     try {

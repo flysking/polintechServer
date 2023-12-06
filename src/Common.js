@@ -1,16 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 앱에 저장 기능 npm install @react-native-async-storage/async-storage
-
-export const saveLoginInfo = async data => {
-  //로그인 성공시 user 정보 저장
-  try {
-    const jsonValue = JSON.stringify(data);
-    await AsyncStorage.setItem('@login_info', jsonValue); //@login_info : key | jsonValue : value
-  } catch (e) {
-    console.error('데이터 저장 중 오류가 발생했습니다:', e);
-  }
-};
+// 로컬 저장소인 AsyncStorage에 정보를 저장하기 위해 Common 페이지에 
+// 사용할 함수들을 생성하였습니다.
 
 export const saveUserInfoAll = async (data) => {
   try {
@@ -23,25 +15,6 @@ export const saveUserInfoAll = async (data) => {
     }
   } catch (e) {
     console.error('사용자 정보 필드 저장 중 오류 발생:', e);
-  }
-};
-
-export const saveHaveProfile=async(data) => {
-  try{
-    const jsonValue=JSON.stringify(data);
-    await AsyncStorage.setItem('@haveProfile',jsonValue);
-    console.log('프로필 이미지 정보 저장');
-  }catch(e){
-    console.error('프로필 이미지가 저장되지 않았음');
-  }
-};
-export const loadHaveProfile = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@haveProfile');
-    console.log('프로필 정보 확인');
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.error('프로필 로드 중 오류 발생:', e);
   }
 };
 
@@ -81,7 +54,6 @@ export const loadUserInfoAll = async () => {
       isAdmin: 'isAdmin',
       grade: 'grade',
       profile:'profile',
-      //majorname:'majorname',
     });
     const data = {};
     // 각 필드에 대한 AsyncStorage 키를 순회하며 데이터 불러오기
@@ -97,11 +69,12 @@ export const loadUserInfoAll = async () => {
     return null;
   }
 };
+
 export const loadUserInfoAny = async (any) => {
+  //특정 키값을 받아오기 위해 생성한 함수이나 아직까지 사용된 적이 없습니다.
   try {
       //원하는 키값만 가져오기
       const key=any;
-    
       //선택한 키 값에 있는 데이터를 반환해줍니다.
       const value = await AsyncStorage.getItem(`@member_${key}`);
       data = value;
@@ -121,26 +94,10 @@ export const updatingIsCert = async (iscert) => {
     console.error('사용자 정보 업데이트 중 오류 발생:', e);
   }
 };
-export const updatingIsLogin = async (isLogin) => {
-  try {
-      const jsonValue = JSON.stringify(isLogin);
-      await AsyncStorage.setItem('@member_isLogin', jsonValue);
-      console.log('업데이트할 데이터:',jsonValue);
-  } catch (e) {
-    console.error('사용자 정보 업데이트 중 오류 발생:', e);
-  }
-};
-export const loadUserInfo = async () => {
-  //저장한 user 정보 불러옴
-  try {
-    const jsonValue = await AsyncStorage.getItem('@login_info');
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.error('데이터 불러오기 중 오류가 발생했습니다:', e);
-  }
-};
 
 export const logOut = async () => 
+//로그아웃 시 앱에 저장되어 있는 정보들을 모두 지워야합니다.
+//유사한 기능으로 JSP의 session.invalidate() 가 있습니다.
 {
   const keys = Object.keys({
     id: 'id',

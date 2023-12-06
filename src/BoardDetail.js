@@ -94,6 +94,7 @@ const BoardDetail = ({route, navigation}) => {
         ),
     });
   }, [navigation]);
+
   const onSelectImage = () => {
     //이미지 출력 테스트 함수
     launchImageLibrary(
@@ -370,8 +371,8 @@ const BoardDetail = ({route, navigation}) => {
   if (!board) return <Text>Loading...</Text>;
 
   return (
-    <SafeAreaView style={{width:'100%',}}>
-      <FlatList
+    <SafeAreaView style={{width:'100%', backgroundColor:'#ffffff'}}>
+      <FlatList style={{backgroundColor:'#ffffff'}}
         ListHeaderComponent={
           <>
               <View style={styles.block}>
@@ -424,8 +425,8 @@ const BoardDetail = ({route, navigation}) => {
                 <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'bold'}}>등록</Text>
               </TouchableOpacity>
             </View>
-            <View style={{backgroundColor:'#gray',height:30, justifyContent:'center'}}>
-              <Text style={{marginLeft:10,fontSize:15,color:'#000000'}}>댓글 목록:</Text>
+            <View style={{backgroundColor:'gray',height:30, justifyContent:'center'}}>
+              <Text style={{marginLeft:10,fontSize:15,color:'#ffffff'}}>댓글 목록:</Text>
             </View>
           </>
         }
@@ -437,7 +438,7 @@ const BoardDetail = ({route, navigation}) => {
         }
         renderItem={({item}) =>
           item.comment_id ? (
-            <View style={styles.commentArea}>
+            <View style={item.comment_mid===id?styles.commentAreaFocused:styles.commentArea}>
               <TouchableOpacity
                 onPress={() =>
                   onCommentClick(
@@ -446,7 +447,7 @@ const BoardDetail = ({route, navigation}) => {
                     item.comment_content,
                   )
                 }>
-                <Text>
+                <Text style={{color:'#000000'}}>
                   {'['}
                   {item.member_name}
                   {']'} : {item.comment_content}{' '}
@@ -466,6 +467,7 @@ const BoardDetail = ({route, navigation}) => {
                   renderItem={({item: reply}) =>
                     reply.reply_cid ? (
                       <TouchableOpacity
+                      style={reply.reply_mid===id?styles.replyAreaFocused : styles.replyArea}
                         onPress={() =>
                           onReplyClick(
                             reply.reply_id,
@@ -474,7 +476,7 @@ const BoardDetail = ({route, navigation}) => {
                             reply.reply_content,
                           )
                         }>
-                        <Text>
+                        <Text style={{color:'#000000'}}>
                           {'   ['}
                           {reply.member_name}
                           {']'} : {reply.reply_content}{' '}
@@ -567,10 +569,27 @@ const styles = StyleSheet.create({
     marginTop:30,
     marginHorizontal:10,
   },
-  commentArea:{
+  commentArea:{   
     backgroundColor:'#ffffff',
     paddingHorizontal:10,
-    paddingBottom:20,
+    paddingVertical:20,
+    borderBottomWidth:1,
+    borderColor:'gray',
+  },
+  commentAreaFocused:{   
+    backgroundColor:'#efefef',
+    paddingHorizontal:10,
+    paddingVertical:20,
+    borderBottomWidth:1,
+    borderColor:'gray',
+  },
+  replyArea:{
+    backgroundColor:'#ffffff',
+    paddingVertical:10,
+  },
+  replyAreaFocused:{
+    backgroundColor:'#efefef',
+    paddingVertical:10,
   },
   overlayBox: {
     position:'absolute',

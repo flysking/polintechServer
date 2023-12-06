@@ -1,40 +1,29 @@
 import React, {useState, useEffect,useLayoutEffect} from 'react';
-import {Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
+import {ToastAndroid,Dimensions,Image,KeyboardAvoidingView,View, Text, FlatList, TouchableOpacity,StyleSheet, Pressable} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { loadUserInfoAll,logOut,saveDarkmode,loadDarkmode,saveHaveProfile,loadHaveProfile } from './Common';
+import { loadUserInfoAll,logOut, } from './Common';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 //다크모드 추가하자
 function DrawerModal () {
     const [userInfo, setUserInfo]=useState({});
     const navigation=useNavigation();
+    const [profile,setProfile]=useState(null);
     const [name,setName]=useState(null);
-    const [darkmode,setDarkmode]=useState(null);
-    const [haveProfile,setHaveProfile]=useState(null);
 
     useEffect(()=>{
         const checkUserInfo=async()=>{
+            //앱에 저장되어 있는 유저 정보를 불러옵니다.
             const userData=await loadUserInfoAll();
             if(userData){
                 console.log(userData);
                 setUserInfo(userData);
                 setName(userData.name);
+                setProfile(userData.profile);
             }
         };
         checkUserInfo();
     },[]);
-
-    useEffect(()=>{
-        const checkHaveProfile=async()=>{
-            const checkProfile=await loadHaveProfile();
-            if(checkProfile===0){
-                setHaveProfile(0);
-            }else{
-                setHaveProfile(1);
-            }
-        };
-        checkHaveProfile();
-    },[haveProfile]);
 
     const logOutUser=async()=>{
         await logOut();
@@ -45,29 +34,25 @@ function DrawerModal () {
         console.log(name,'님 학생증으로 이동');
         navigation.navigate('StudentIDC',{userInfo:userInfo});
     };
+    //다크모드 설정
     const handleSetting=()=>{
-        setDarkmode(1);
+        //현재 다크모드 기능을 제외했기때문에 준비 중 메세지를 보이도록 하였습니다.
+        ToastAndroid.show('준비 중인 기능입니다.', ToastAndroid.SHORT);
     };
     const handleMypage=()=>{
         console.log('마이페이지 이동');
         navigation.navigate('MyPage',{userInfo:userInfo});
     };
+    const imagePath = `../image/profileImg/${profile}.png`;
 
     return(
         <View style={styles.overlayBox}>
             <View style={styles.profileBox}>
                 <TouchableOpacity>
-                    {haveProfile === 0 ?(
-                        <Image
-                            source={require('../image/profile.gif')}
-                            style={styles.profileImg}
-                        />
-                    ) : (
-                        <Image
-                            source={require('../image/profile.gif')}
-                            style={styles.profileImg}
-                        />
-                    )}
+                    <Image  
+                        source={{uri:`https://storage.googleapis.com/polintech_image/AppImage/profile/${profile}.png`}}
+                        style={styles.profileImg}
+                    />
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Text style={{ color:'#000000',marginTop:15, fontSize:20,}}>
@@ -96,7 +81,6 @@ function DrawerModal () {
                 </TouchableOpacity>
             </View>
             <View style={styles.settingBox}>
-                {}
                 <TouchableOpacity onPress={handleSetting}>
                     <Icon name="dark-mode" style={styles.icon}color={'#000000'} size={25} />
                 </TouchableOpacity>

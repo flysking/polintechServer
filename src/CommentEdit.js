@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, TextInput, Button, Alert, Text} from 'react-native';
+import React, {useState, useEffect,useLayoutEffect} from 'react';
+import {View, TextInput, TouchableOpacity, Alert, Text} from 'react-native';
 
 const CommentEdit = ({route, navigation}) => {
   const comment_id = route.params.comment_id;
@@ -10,6 +10,19 @@ const CommentEdit = ({route, navigation}) => {
   const [commentId, setCommentId] = useState(comment_id);
   const [commentMid, setCommentMid] = useState(comment_mid);
   const [commentContent, setCommentContent] = useState(comment_content);
+
+  useLayoutEffect(()=>{
+    navigation.setOptions({
+      title:"댓글 수정",
+      headerTitleStyle: {
+        color: '#ffffff', // 원하는 색상으로 변경
+      },
+      headerStyle:{
+        backgroundColor:'#003497',
+      },
+      headerTintColor: '#ffffff',
+    })
+  },[navigation])
 
   const updateComment = async () => {
     //댓글 수정
@@ -73,10 +86,17 @@ const CommentEdit = ({route, navigation}) => {
         placeholder={comment_content}
         multiline
         numberOfLines={5}
-        style={{borderWidth: 1, marginBottom: 10, padding: 5}}
+        style={{borderWidth: 1, padding: 5}}
       />
-      <Button title="댓글 수정" onPress={updateComment} />
-      <Button title="댓글 삭제" onPress={DeleteComment} />
+      <View style={{flexDirection:'row',width:'100%',justifyContent:'center'}}>
+        <TouchableOpacity style={{borderRadius:15,marginHorizontal:5,backgroundColor:'#003497'}} onPress={updateComment} >
+          <Text style={{color:'#ffffff', padding:10,}}>댓글 수정</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{borderRadius:15,marginHorizontal:5, backgroundColor:'#003497'}}  onPress={DeleteComment} >
+          <Text style={{color:'#ffffff', padding:10,}}>댓글 삭제</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };

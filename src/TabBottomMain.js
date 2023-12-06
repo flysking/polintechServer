@@ -3,7 +3,6 @@ import TabHome from "./TabHome";
 import TabNotice from "./TabNotice";
 import TabPopular from "./TabPopular";
 import TabSearch from "./TabSearch";
-import TabWrite from "./TabWrite";
 import CreateBoard from './CreateBoard';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -21,7 +20,7 @@ function TabBottomMain({route}){
         <Tab.Navigator  >
             <Tab.Screen name="Home" component={TabHome}
                 options={{
-                    title:"홈",
+                    //title:"홈",
                     //tabBarLabel:'홈',
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
@@ -66,7 +65,7 @@ function TabBottomMain({route}){
             />
             <Tab.Screen name="Write" component={CreateBoard} 
                 options={{
-                    title:"글쓰기",
+                    title:"게시글 작성",
                     //tabBarLabel:()=>null,
                     //headerShown:false,
                     tabBarIcon:({color,size})=>(
