@@ -236,11 +236,6 @@ function MainTest ({navigation,route}) {
             </View>
             {/* 메인 화면 최하단 */}
             <View style={styles.bottom}>
-                <View style={{marginBottom:40,}}>
-                    <Text style={{color:'gray',fontSize:13,textAlign:'center'}}>
-                        고객 상담 접수 : 카카오톡 @Polintech
-                    </Text>
-                </View>
             {/* 푸터에는 로고와 copyright 메세지를 만들었습니다. */}
                 <Image
                     source={require('../image/KopoLogo.png')}

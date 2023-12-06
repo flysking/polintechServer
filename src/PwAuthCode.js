@@ -16,7 +16,7 @@ const PwAuthCode = ({ navigation }) => {
             authCheck: auth,
             }),
         });
-    
+        
         if (response.ok) {
             Alert.alert('인증 코드가 확인되었습니다\n현재 비밀번호 복구 페이지는 개발중입니다.');
             navigation.navigate('LoginScreen');

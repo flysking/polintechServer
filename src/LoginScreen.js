@@ -155,6 +155,11 @@ const LoginScreen = ({navigation}) => {
       )}
         </>
       )}
+        <View style={{marginVertical:15,}}>
+          <Text style={{color:'gray',fontSize:13,textAlign:'center'}}>
+              고객 상담 접수 : 카카오톡 @Polintech
+          </Text>
+      </View>
     </View>
   );
 };
