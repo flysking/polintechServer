@@ -8,6 +8,9 @@ function TabPopular({navigation}){
   const category=route.params.category;
   const [noCategory,setNoCategory]=useState(false);
 
+    //게시글에 작성된 좋아요 내림차 순으로 게시글을 정렬해주는 페이지입니다.
+    //타 페이지와의 차이점은 제목 우측에 좋아요의 수를 표시하였습니다.
+
     useLayoutEffect(() => {
         navigation.setOptions({
           //tabBarLabel:()=>null,
@@ -110,6 +113,7 @@ function TabPopular({navigation}){
 const styles=StyleSheet.create({
     block:{
         flex:1,
+        backgroundColor:'#ffffff',
     },
     list:{
         width:'90%',

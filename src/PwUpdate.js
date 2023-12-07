@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'react-native';
 import { loadUserInfo } from './Common';
 
-function PwUpdate({ navigation }){
+function PwUpdate({ route, navigation }){
     const [pw, setPw] = useState(''); //현재 비밀번호
     const [newPw, setNewPw] = useState(''); //새로운 비밀번호
     const [pwConfirmation, setPwConfirmation] = useState(''); //새로운 비밀번호 확인
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { id } = route.params;
 
+    //db에서 로그인 상태에서 비밀번호 확인 후 판별
     const handleFindPw = async () => {
+      if(isLoggedIn){
         try {
           const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/findPw', {
             method: 'POST',
@@ -24,6 +27,7 @@ function PwUpdate({ navigation }){
       
           if (json.success) {
             // 비밀번호를 찾았을 때
+            //Alert.alert('비밀번호를 찾았습니다.');
             PwAuthCodeCheck();
           } else {
             // 비밀번호를 찾지 못했을 때
@@ -34,9 +38,45 @@ function PwUpdate({ navigation }){
           console.error(error);
           Alert.alert('서버 오류가 발생했습니다.');
         }
+      } else {
+        handleFindPwSame();
+      }
     };
 
+
+    //db에서 비로그인 상태에서 비밀번호 확인 후 판별
+    const handleFindPwSame = async () => {
+      try {
+        const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/findPwIsLogginedOut', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: id,
+            newPw: newPw,
+          }),
+        });
+    
+        const json = await response.json();
+    
+        if (json.success) {
+          Alert.alert('새로운 비밀번호를 입력해주세요.');
+          return; // 동일한 경우 더 이상 진행하지 않음
+        } else {
+          // 비밀번호가 다를 경우 PwAuthCodeCheck 함수 호출
+          PwAuthCodeCheck();
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('서버 오류가 발생했습니다.');
+      }
+    };
+    
+    //비밀번호 업데이트
     const PwAuthCodeCheck = async () => {
+      //로그인 상태일때
+      if(isLoggedIn){
         try {
 
           if (pw === newPw) {
@@ -67,15 +107,44 @@ function PwUpdate({ navigation }){
         } catch (error) {           
           console.error('재설정 실패:', error);
         }
+        //비로그인 상태일때
+      } else {
+          try {
+
+            const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/PwUpdateIsLogginedOut', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  id: id,
+                  newPw: newPw,
+                }),
+            });  
+
+            const json = await response.json();
+            console.log('서버 응답:', json);
+        
+            if (json.success) {
+              Alert.alert('비밀번호가 재설정 되었습니다.');
+              navigation.navigate('LoginScreen');
+            } else {
+                Alert.alert('비밀번호 재설정 오류.');
+            }
+          } catch (error) {           
+            console.error('재설정 실패:', error);
+          }
+      }
     };
 
     useEffect(() => {
       // AsyncStorage에서 사용자 정보를 불러와 로그인 상태를 판단합니다.
       const checkLoginStatus = async () => {
-        const userInfo = await loadUserInfoAll();
+        const userInfo = await loadUserInfo();
         if (userInfo) {
-          // setIsLoggedIn(userInfo);
-          // console.log('로그인 정보 확인함');
+          
+          setIsLoggedIn(userInfo);
+          console.log('로그인 정보 확인함');
         } else {
           
         }
@@ -86,9 +155,12 @@ function PwUpdate({ navigation }){
 
     return (
         <>
-
+        {/* 로그인 타입에 따라 비밀번호를 업데이트하는 폼이 바뀝니다. */}
+        {isLoggedIn ? (
+          <>
+          {/* 로그인 상태일떄 */}
           <View style={styles.topMenu}>
-            <Text>비밀번호 재설정을 위해 현재 비밀번호를 입력해주세요</Text>
+            <Text>비밀번호 재설정을 위해 현재 비밀번호를 입력해주세요.</Text>
           </View>
           <View style={styles.container}>
             <TextInput
@@ -134,6 +206,53 @@ function PwUpdate({ navigation }){
                   </Text>
               )}
           </View>
+          </>
+        ) : (
+          <>
+          {/* 비로그인 상태일떄 */}
+            <View style={styles.topMenu}>
+              <Text>인증 코드 확인을 위해 발송된 코드를 입력해주세요.</Text>
+            </View>
+            <View style={styles.container}>
+              <TextInput
+                  style={styles.input}
+                  placeholder="새로운 비밀번호"
+                  onChangeText={setNewPw}
+                  value={newPw}
+                  secureTextEntry/>
+                <Text>
+                {newPw === ''
+                  ? ''
+                  : newPw.length < 6 && newPw.length < 20
+                  ? '6~20자의 숫자, 영문 대/소문자, 특수문자를 사용해주세요.'
+                  : !/[0-9]/.test(newPw)
+                  ? '6~20자의 숫자, 영문 대/소문자, 특수문자를 사용해주세요.'
+                  : !/[a-z]/.test(newPw)
+                  ? '6~20자의 숫자, 영문 대/소문자, 특수문자를 사용해주세요.'
+                  : newPw.length > 20
+                  ? '6~20자의 숫자, 영문 대/소문자, 특수문자를 사용해주세요.'
+                  : !/[A-Z]/.test(newPw)
+                  ? '영어 대문자를 포함해주세요.'
+                  : !/[^a-zA-Z0-9]/.test(newPw)
+                  ? '특수문자를 포함해주세요.'
+                  : '사용 가능한 비밀번호입니다.'}  
+                </Text>          
+                <TextInput
+                  style={styles.input}
+                  placeholder="비밀번호 확인"
+                  onChangeText={setPwConfirmation}
+                  value={pwConfirmation}
+                  secureTextEntry/>
+                {pwConfirmation !== '' && (
+                    <Text style={styles.passwordMessage}>
+                        {newPw === pwConfirmation
+                        ? '비밀번호가 일치합니다.'
+                        : '비밀번호가 일치하지 않습니다.'}
+                    </Text>
+                )}
+            </View>
+          </>
+        )}
         <View style={styles.container}>
             <TouchableOpacity style={styles.findIdButton} onPress={handleFindPw}>
               <Text style={styles.findIdButtonText}>비밀번호 재설정</Text>

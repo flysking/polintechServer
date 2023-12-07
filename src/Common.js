@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const saveUserInfoAll = async (data) => {
   try {
+    //로그인 페이지에서 keys에 해당하는 값들을 저장하도록 하였습니다.
     const keys = Object.keys(data);
     // 각 필드에 대한 AsyncStorage 키를 순회하며 데이터 저장
     for (const key of keys) {
@@ -17,7 +18,7 @@ export const saveUserInfoAll = async (data) => {
     console.error('사용자 정보 필드 저장 중 오류 발생:', e);
   }
 };
-
+//다크모드 설정 값을 저장하는 함수이지만 아직 개발중입니다.
 export const saveDarkmode=async (data) => {
   try{
     const jsonValue=JSON.stringify(data);
@@ -27,7 +28,7 @@ export const saveDarkmode=async (data) => {
     console.error('다크모드 정보 저장 실패');
   }
 };
-
+//다크모드 설정 값을 로드하는 함수이지만 아직 개발중입니다.
 export const loadDarkmode = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem('@darkmode');
@@ -37,7 +38,7 @@ export const loadDarkmode = async () => {
     console.error('다크모드 로드 중 오류 발생:', e);
   }
 };
-
+//유저의 모든 정보를 불러옵니다.
 export const loadUserInfoAll = async () => {
   try {
     const keys = Object.keys({
@@ -97,7 +98,7 @@ export const updatingIsCert = async (iscert) => {
 
 export const logOut = async () => 
 //로그아웃 시 앱에 저장되어 있는 정보들을 모두 지워야합니다.
-//유사한 기능으로 JSP의 session.invalidate() 가 있습니다.
+//유사한 기능으로 JSP의 session.invalidate() 가 있습니다
 {
   const keys = Object.keys({
     id: 'id',

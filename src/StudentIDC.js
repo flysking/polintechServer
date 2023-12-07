@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect,useState,useLayoutEffect } from 'react';
 import {ScrollView,Alert,TouchableOpacity,Dimensions,Image,TextInput,Pressable,Platform,SafeAreaView,Text, StyleSheet,Button,View} from 'react-native';
 import  {saveLoginInfo, loadUserInfo, logOut } from './Common';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -13,6 +13,18 @@ const StudentIDC=({navigation,route})=>{
     const [showOverlay, setShowOverlay] = useState(false); // 추가
     const [idcInfo,setIdcInfo]=useState(null);
     const [haveIdc,setHaveIdc]=useState(null);
+
+    useLayoutEffect(() => {
+      navigation.setOptions({
+          headerTitleStyle: {
+            color: '#ffffff', // 헤더 제목의 색상
+          },
+          headerTintColor: '#ffffff',
+          headerStyle: {
+              backgroundColor: '#003497',
+          },
+      });
+    }, [navigation]);
 
     useEffect(()=>{
       const getIdc=async()=>{
@@ -213,7 +225,7 @@ const StudentIDC=({navigation,route})=>{
               </Pressable>
             </View>
             <TouchableOpacity style={styles.certButton} onPress={handleIdc}>
-              <Text style={styles.certButtonText}>재학생 인증 신청</Text>
+              <Text style={styles.certButtonText}>학생증 발급 신청</Text>
             </TouchableOpacity>
 
           {showOverlay && (

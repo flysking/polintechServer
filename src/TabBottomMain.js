@@ -8,6 +8,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Tab=createBottomTabNavigator();
+//게시판 상세 페이지를 담는 탭 내비게이터 컴포넌트입니다.
+//createBottomTabNavigator()를 이용해서 하단에 예쁜 탭 바를 생성할 수 있고
+//기본 페이지는 Home으로 설정했습니다.
 
 function TabBottomMain({route}){
     useEffect(()=>{

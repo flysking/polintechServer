@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { loadUserInfoAll,logOut, } from './Common';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-//다크모드 추가하자
+
 function DrawerModal () {
     const [userInfo, setUserInfo]=useState({});
     const navigation=useNavigation();

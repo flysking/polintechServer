@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'react-native';
 
-const PwAuthCode = ({ navigation }) => {
+const PwAuthCode = ({ route, navigation }) => {
     const [auth, setAuth] = useState('');
+    const { id } = route.params;
 
+    // 인증코드 동일 판별 여부 확인
     const PwAuthCodeCheck = async () => {
         try {
 
@@ -16,10 +18,10 @@ const PwAuthCode = ({ navigation }) => {
             authCheck: auth,
             }),
         });
-        
+    
         if (response.ok) {
-            Alert.alert('인증 코드가 확인되었습니다\n현재 비밀번호 복구 페이지는 개발중입니다.');
-            navigation.navigate('LoginScreen');
+            Alert.alert('인증 코드가 확인되었습니다');
+            navigation.navigate('PwUpdate', { id: id });
         } else {
             Alert.alert('인증 코드가 일치하지 않습니다.');
         }
@@ -30,6 +32,7 @@ const PwAuthCode = ({ navigation }) => {
 
     return (
         <>
+        {/* 인증코드 입력 */}
         <View style={styles.topMenu}>
             <Text>인증 코드 확인을 위해 발송된 코드를 입력해주세요.</Text>
         </View><View style={styles.container}>

@@ -15,7 +15,7 @@ const CommentEdit = ({route, navigation}) => {
     navigation.setOptions({
       title:"댓글 수정",
       headerTitleStyle: {
-        color: '#ffffff', // 원하는 색상으로 변경
+        color: '#ffffff', 
       },
       headerStyle:{
         backgroundColor:'#003497',

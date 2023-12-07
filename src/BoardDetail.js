@@ -19,15 +19,15 @@ import {saveLoginInfo, loadUserInfoAll, logOut} from './Common';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const BoardDetail = ({route, navigation}) => {
   const apiUrl = 'https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app';
-  const [board, setBoard] = useState(null);
-  const [id, setId] = useState('');
-  const [boardMid, setBoardMid] = useState('');
-  const [pw, setPw] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [name, setName] = useState('');
-  const [isAdmin, setIsAdmin] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [major, setMajor] = useState('');
+  const [board, setBoard] = useState(null);  //게시글 데이터
+  const [id, setId] = useState(''); //현재 로그인 유저 id
+  const [boardMid, setBoardMid] = useState(''); //현재 게시글의 작성자 id
+  const [pw, setPw] = useState(''); //현재 로그인 유저 pw
+  const [nickname, setNickname] = useState(''); //현재 로그인 유저 nickname
+  const [name, setName] = useState(''); //현재 로그인 유저 name
+  const [isAdmin, setIsAdmin] = useState(0); //현재 로그인 유저가 관라자 권한을 가지고 있는지 확인하는 변수
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //현재 로그인인지 아닌지 확인하는 변수
+  const [major, setMajor] = useState(''); //현재 로그인 유저의 학과
   const [likeCount, setLikeCount] = useState(0); // 좋아요 개수 저장
   const boardId = route.params.boardId; // 게시글 id
   const [trigger, setTrigger] = useState(false); //좋아요의 변경 여부 확인
@@ -38,44 +38,7 @@ const BoardDetail = ({route, navigation}) => {
   const [isImage, setIsImage] = useState(false); //게시글에 이미지 존재 여부
   const [imageName, setImageName] = useState(''); //게시글에 이미지 이름
   const [modalVisible, setModalVisible] = useState(false);//모달창을 띄우기 위한 변수
-  
-  //약 4~5분정도 후에 Loading끝나는것 확인
-  //await가 너무 많이 실행되서 그런것으로 추정됨.
-  //기다려본 결과 시간이 지난 후에 지금까지 클릭했던 await 명령을 순차적으로 수행함.
-  //BoardDetail 최적화중
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // 1. 이미지 확인
-  //       const imageResponse = await fetch(`${apiUrl}/ImageCheck/${boardId}`);
-  //       const imageJson = await imageResponse.json();
-  //       // Handle image data...
-        
-  //       // 2. 조회수 증가
-  //       await fetch(`${apiUrl}/BoardHitsUpdate/${boardId}`);
-        
-  //       // 3. 상세보기 불러오기
-  //       const boardResponse = await fetch(`${apiUrl}/BoardDetail/${boardId}`);
-  //       const boardData = await boardResponse.json();
-  //       // Handle board data...
-  
-  //       // 4. 댓글 조회
-  //       const commentsResponse = await fetch(`${apiUrl}/CommentList/${boardId}`);
-  //       const commentsData = await commentsResponse.json();
-  //       // Handle comments...
-  
-  //       // 5. 답글 조회
-  //       const replysResponse = await fetch(`${apiUrl}/ReplyList/${boardId}`);
-  //       const replysData = await replysResponse.json();
-  //       // Handle replys...
-  //     } catch (error) {
-  //       console.error('오류 발생:', error);
-  //     }
-  //   };
-  
-  //   fetchData();
-  // }, [boardId, isImage, trigger]);
-  //BoardDetail 최적화
+
   useLayoutEffect(() => {
     navigation.setOptions({
         headerTitleStyle: {
@@ -95,26 +58,8 @@ const BoardDetail = ({route, navigation}) => {
     });
   }, [navigation]);
 
-  const onSelectImage = () => {
-    //이미지 출력 테스트 함수
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        maxWidth: 512,
-        maxHeight: 512,
-        includeBase64: Platform.OS === 'android',
-      },
-      res => {
-        // console.log(res);
-        if (res.didCancel) {
-          return;
-        }
-        setResponse(res);
-      },
-    );
-  };
   useEffect(() => {
-    //조회수 증가 불러오기
+    //DB에 있는 해당 게시글의 조회수 증가 함수
     const updateHits=async()=>{
       try{
         await fetch(`${apiUrl}/BoardHitsUpdate/${boardId}`);
@@ -127,9 +72,11 @@ const BoardDetail = ({route, navigation}) => {
   }, [boardId]);
 
   useEffect(() => {
+     /*게시글 이미지 체크, 게시글 상세정보, 댓글, 답글 조회 함수
+    이때 boardId, isImage, isImageI 변수가 변경될때 마다 실행한다.*/
     const fetchData = async () => {
       try {
-        // 1. 이미지 확인
+       // 1.DB에서 해당 게시글에 이미지가 존재하는지 확인
         const imageResponse = await fetch(`${apiUrl}/ImageCheck/${boardId}`);
         if (!imageResponse.ok) {
           console.error('이미지 확인 요청 에러:', imageResponse.status);
@@ -152,8 +99,8 @@ const BoardDetail = ({route, navigation}) => {
 
           // Handle image data...
         }
-        console.log('게시글 정보불로오기 실행 ');
-        // 2. 상세보기 불러오기
+        console.log('게시글 정보불러오기 실행 ');
+        // 2. DB에서 해당 게시글의 데이터를 불러오기
         const boardResponse = await fetch(`${apiUrl}/BoardDetail/${boardId}`);
         if (!boardResponse.ok) {
           console.error('상세보기 요청 에러:', boardResponse.status);
@@ -168,7 +115,7 @@ const BoardDetail = ({route, navigation}) => {
           });
         }
 
-        // 3. 댓글 조회
+        // 3. DB에서 해당 게시글의 댓글 조회
         const commentsResponse = await fetch(
           `${apiUrl}/CommentList/${boardId}`,
         );
@@ -178,10 +125,9 @@ const BoardDetail = ({route, navigation}) => {
           const commentsData = await commentsResponse.json();
           setComments(commentsData.comments);
           // console.log(comments);
-          // Handle comments...
         }
 
-        // 4. 답글 조회
+        // 4. DB에서 해당 게시글의 댓글의 답글 조회
         const replysResponse = await fetch(`${apiUrl}/ReplyList/${boardId}`);
         if (!replysResponse.ok) {
           console.error('답글 조회 요청 에러:', replysResponse.status);
@@ -189,8 +135,6 @@ const BoardDetail = ({route, navigation}) => {
           const replysData = await replysResponse.json();
           setReplys(replysData.replys);
           // console.log(replys);
-
-          // Handle replys...
         }
       } catch (error) {
         console.error('오류 발생:', error);
@@ -203,7 +147,7 @@ const BoardDetail = ({route, navigation}) => {
   useEffect(() => {
     //userinfo 불러오기
     const fetchUser = async () => {
-      const savedData = await loadUserInfoAll(); //Common폴더에 있는 userinfo
+      const savedData = await loadUserInfoAll(); //Common폴더에 있는 loadUserInfoAll
 
       if (savedData) {
         setId(savedData.id);
@@ -253,7 +197,7 @@ const BoardDetail = ({route, navigation}) => {
   };
 
   const onEditClick = () => {
-    //게시글 수정하기 이동
+    //게시글 수정하는 페이지 이동
     if (board) {
       navigation.navigate('BoardEdit', {
         image_name: imageName,
@@ -318,7 +262,7 @@ const BoardDetail = ({route, navigation}) => {
       });
   };
   const onCommentClick = (commentId, comment_mid, comment_content) => {
-    //댓글 클릭시
+    //댓글 클릭시 답글을 생성할 수 있으며 작성자일때 댓글을 수정할 수 있다.
     if (comment_mid == id) {
       //댓글 수정
       navigation.navigate('CommentEdit', {
@@ -341,7 +285,7 @@ const BoardDetail = ({route, navigation}) => {
 
 
   const onReplyClick = (reply_id, reply_cid, reply_mid, reply_content) => {
-    //답글 클릭시
+     //답글 클릭시 작성자일때 답글을 수정할 수 있다.
     if (reply_mid == id) {
       //답글 수정
       navigation.navigate('ReplyEdit', {
@@ -353,7 +297,7 @@ const BoardDetail = ({route, navigation}) => {
       });
     }
   };
-
+  //작성일자의 형식을 변경하기 위한 함수
   const formatDate = (dateString) => {
     return moment(dateString).format('YYYY-MM-DD HH:mm');
   };
@@ -388,6 +332,7 @@ const BoardDetail = ({route, navigation}) => {
                 <View style={{textAlign:'left',width:'100%',minHeight:250,}}>
                   <View style={{width:'100%',alignItems:'center'}}>
                     <Pressable>
+                    {/*DB에 해당 게시글에 이미지 파일명이 존재하면 구글 클라운드에 업로드되어 있는 이미지를 들고 온다. */}
                     {isImage ? (
                       <Image
                         style={styles.imageArea}
@@ -552,11 +497,9 @@ const styles = StyleSheet.create({
     height:400,
   },
   header: {
-    //flexDirection:'row',
     marginTop:10,
     paddingHorizontal:16,
     width: '100%',
-    //alignItems: 'center',
   },
   line:{
     marginTop:15,

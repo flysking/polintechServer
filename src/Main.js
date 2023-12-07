@@ -14,6 +14,7 @@ function MainTest ({navigation,route}) {
     const [modalVisible,setModalVisible]=useState(false);
 
     useEffect(() => {
+        //뒤로가기 버튼에 이벤트를 추가해서 앱 종료 메세지를 띄우도록 하였습니다.
         const backAction = () => {
           if (navigation.isFocused()) {
             Alert.alert('앱 종료', '앱을 종료하시겠습니까?', [

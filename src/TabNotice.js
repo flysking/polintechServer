@@ -111,6 +111,7 @@ function TabNotice({navigation}){
 const styles=StyleSheet.create({
     block:{
         flex:1,
+        backgroundColor:'#ffffff',
     },
     list:{
         width:'90%',

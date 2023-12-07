@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState  } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'react-native';
 
-const PwEmailAuth = ({ navigation }) => {
+const PwEmailAuth = ({ route, navigation }) => {
     const [email, setEmail] = useState('');
+    const { id } = route.params;
 
+    //db에서 이메일 확인 후 판별
     const PwAuthEmailCheck = async () => {
       try {
         const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/findEmail', {
@@ -30,6 +32,7 @@ const PwEmailAuth = ({ navigation }) => {
       }
     };
   
+    //이메일 전송
     const handleAuthEmail = async () => {
       try {
   
@@ -47,7 +50,7 @@ const PwEmailAuth = ({ navigation }) => {
     
         if (response.ok) {
           Alert.alert('인증 코드가 전송되었습니다.');
-          navigation.navigate('PwAuthCode');
+          navigation.navigate('PwAuthCode', { id: id });
         } else {
           Alert.alert('인증 코드 전송 실패');
         }
@@ -58,6 +61,7 @@ const PwEmailAuth = ({ navigation }) => {
   
     return (
       <>
+      {/* 이메일 주소 입력 */}
       <View style={styles.topMenu}>
           <Text>비밀번호 재설정을 위한 이메일 인증을 해주세요</Text>
       </View><View style={styles.container}>

@@ -4,11 +4,12 @@ import {loadUserInfo, logOut } from './Common';
 
 const CheckIsCert = ({navigation,route}) =>{
     const {userInfo}=route.params;
+
+    //로그인 직후 iscert값을 받아와 재학생 인증 여부를 체크합니다.
     useEffect(()=>{
         const checkCert=async()=>{
-            console.log(userInfo);
             const iscert=userInfo.iscert;
-            console.log('재학생체크:',iscert);
+            //재학생 인증이 완료되었을때만 메인페이지를 호출합니다.
             if(iscert===0){
                 Alert.alert('재학생 인증이 필요합니다.');
                 navigation.navigate('Certificate',{userInfo:userInfo});

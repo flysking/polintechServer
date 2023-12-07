@@ -9,9 +9,11 @@ const Certificate=({navigation,route})=>{
     const [id,setId]=useState(userInfo.id);
     const [name, setName]=useState(userInfo.name);
     const [response,setResponse]=useState(null);
-    const [showOverlay, setShowOverlay] = useState(false); // 추가
+    const [showOverlay, setShowOverlay] = useState(false); //메세지 클릭 시 설명창을 보여주기 위한 변수
 
+    //이미지 업로드
     const onSelectImage=()=>{
+      //휴대폰의 갤러리를 호출합니다.
       launchImageLibrary({
         mediaType:'photo',
         maxWidth:512,
@@ -23,11 +25,13 @@ const Certificate=({navigation,route})=>{
         if(res.didCancel){
           return;
         }
+        //이미지의 정보들을 response 변수에 저장합니다.
         setResponse(res);
       },
       );
     };
 
+    //재학생 인증 신청
     const handleCertificate=async()=>{
       const formData=new FormData();
       formData.append('image',{
@@ -45,6 +49,7 @@ const Certificate=({navigation,route})=>{
           },
           body:formData,
         });
+        //이미지가 등록되었을때만 다음 단계로 넘어갑니다.
         if(res.ok){
           try{
             const data={
@@ -52,6 +57,7 @@ const Certificate=({navigation,route})=>{
               image_category:'재학생인증',
               image_name:response?.assets[0]?.fileName,
             }
+            //아이디, 이미지 유형, 이미지 이름을 지정해 db에 업로드합니다.
             const toDB=await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/UploadToDB',{
               method:'POST',
               headers:{
@@ -64,6 +70,7 @@ const Certificate=({navigation,route})=>{
               if(json.success){
                 console.log('db 삽입 완료');
                 console.log('유저:',id);
+                //이미지 업로드를 끝낸 후 인증값을 업데이트 하기 위해 페이지를 이동합니다.
                 navigation.navigate('UpdateCert',{id:id,userInfo:userInfo});
               }else{
                 console.log('데이터베이스 업로드 실패..');
@@ -88,11 +95,7 @@ const Certificate=({navigation,route})=>{
         return;
       }
     };
-    const btnLogout= async ()=>{
-        await logOut();
-        console.log('로그아웃 눌렀어용');
-        navigation.navigate('LoginScreen');
-    }
+    //재학생 인증 페이지 추가 설명창입니다.
     const overlayBox = (
       <View style={styles.overlayBox}>
         <Text style={styles.overlayTitle}>
@@ -162,8 +165,9 @@ const styles=StyleSheet.create({
     color:'#000000',
   },
   block:{
+    backgroundColor:'#ffffff',
     alignItems:'center',
-    marginTop:24,
+    paddingVertical:24,
     paddingHorizontal:16,
     width:'100%',
   },

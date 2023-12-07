@@ -24,6 +24,7 @@ function TabHome({navigation}){
       }, [navigation]);
 
     useEffect(() => {
+        //라우트 객체에서 카테고리 값을 받아와 어떤 게시판을 보여줄지 판단합니다.
         const fetchBoards = async () => {
             if(category==='전체게시판'){
                 try {
@@ -142,7 +143,9 @@ function TabHome({navigation}){
     };
 
     return (
-        <SafeAreaView style={{flex:1}}>
+        //학과 게시판을 제외하고, 해당 게시판에 지정된 서브 카테고리들을 선택해 게시글을 볼 수 있도록 합니다.
+        //충돌 현상을 고치지 못해 최종 결과물에선 제외하였습니다.
+        <SafeAreaView style={{flex:1, backgroundColor:'#ffffff'}}>
         <View style={{width:'100%'}}>
         {category !== '학과게시판' ?(
             <View style={styles.subcategoryBar}>

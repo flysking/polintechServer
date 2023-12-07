@@ -106,7 +106,7 @@ const LoginScreen = ({navigation}) => {
 
   const handlePasswordRecovery = () => {
     //비밀번호 복구 페이지
-    navigation.navigate('PwRecover');
+    navigation.navigate('IdRecover');
   };
 
   return (
@@ -144,7 +144,7 @@ const LoginScreen = ({navigation}) => {
       </TouchableOpacity>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.passwordRecoveryButton, { backgroundColor: 'transparent' }]} onPress={handlePasswordRecovery}>
-          <Text style={[styles.passwordRecoveryButtonText, { color: 'black' }]}>비밀번호찾기</Text>
+          <Text style={[styles.passwordRecoveryButtonText, { color: 'black' }]}>회원정보찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.signupButton, { backgroundColor: 'transparent' }]} onPress={handleSignUp}>
           <Text style={[styles.signupButtonText, { color: 'black' }]}>회원가입</Text>

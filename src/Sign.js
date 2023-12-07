@@ -3,15 +3,13 @@ import {
     View,
     Text,
     TextInput,
-    Button,
     TouchableOpacity,
     StyleSheet,
     ScrollView,
     Alert,
   } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import { SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import LoginScreen from './LoginScreen';
 
 function Sign({navigation}){
@@ -42,7 +40,7 @@ function Sign({navigation}){
           checkIfIdExists(id);
         }
       }, [id]);
-
+      //db에서 아이디 중복 여부 확인 후 실시간으로 메세지 업데이
       const checkIfIdExists = async (id) => {
         console.log('체크 아이디 호출');
         try {
@@ -66,7 +64,6 @@ function Sign({navigation}){
         }
       };
     
-    
     const signuser = async () => {
       try {
         const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/Sign', {
@@ -88,10 +85,6 @@ function Sign({navigation}){
           }),
         });
         const json = await response.json();
-        //현재 DTO값으로 인해 JSONParse에러 발생, 
-        //학과때문에 발생하는것으로 추정, 2번 회원가입 클릭하면 되긴함
-        //dto 클래스 수정, sql문 수정 필요함.
-        
         console.log('서버로부터의 응답 :', json);
   
         if (id === '') {
@@ -183,6 +176,7 @@ function Sign({navigation}){
       <SafeAreaView style={{backgroundColor:'#ffffff'}}>
       <ScrollView>
       <Text style={styles.headerText}>회원가입</Text>
+      {/* 학번 */}
       <Text style={styles.labelText}>학번</Text>
       <TextInput
         style={styles.input}
@@ -191,6 +185,7 @@ function Sign({navigation}){
         placeholder="학번"
       />
       <Text style={{marginLeft:20,}}>{idMessage}</Text>
+      {/* 비밀번호 */}
       <Text style={styles.labelText}>비밀번호</Text>
       <TextInput
         style={styles.input}
@@ -199,6 +194,7 @@ function Sign({navigation}){
         placeholder="비밀번호"
         secureTextEntry
       />
+      {/* 비밀번호 정규식 메시지 */}
       <Text style={styles.passwordMessage}>
         {pw === ''
           ? ''
@@ -217,6 +213,7 @@ function Sign({navigation}){
           : '사용 가능한 비밀번호입니다.'}
       </Text>
       <Text style={styles.labelText}>비밀번호 확인</Text>
+      {/* 비밀번호 확인 */}
       <TextInput
         style={styles.input}
         value={pwConfirmation}
@@ -224,6 +221,7 @@ function Sign({navigation}){
         placeholder="비밀번호 확인"
         secureTextEntry
       />
+      {/* 비밀번호 일치 메시지 */}
       {pwConfirmation !== '' && (
         <Text style={styles.passwordMessage}>
           {pw === pwConfirmation
@@ -231,6 +229,7 @@ function Sign({navigation}){
             : '비밀번호가 일치하지 않습니다.'}
         </Text>
       )}
+      {/* 이름 */}
       <Text style={styles.labelText}>이름</Text>
       <TextInput
         style={styles.input}
@@ -238,6 +237,7 @@ function Sign({navigation}){
         onChangeText={setName}
         placeholder="이름"
       />
+      {/* 닉네임 */}
       <Text style={styles.labelText}>닉네임</Text>
       <TextInput
         style={styles.input}
@@ -245,6 +245,7 @@ function Sign({navigation}){
         onChangeText={setNickname}
         placeholder="닉네임"
       />
+      {/* 닉네임 정규식 메시지 */}
       <Text style={styles.nickMessage}>
         {nickname === ''
           ? ''
@@ -252,7 +253,9 @@ function Sign({navigation}){
           ? '닉네임은 5~8자로 입력해주세요'
           : ''}
       </Text>
+      {/* 영문 이름 */}
       <Text style={styles.labelText}>영문 이름</Text>
+      {/* 학과 선택 Picker */}
       <TextInput
         style={styles.input}
         value={engname}
@@ -282,6 +285,7 @@ function Sign({navigation}){
         <Picker.Item label="디지털융합" value="13" />
       </Picker>
       </View>
+      {/* 학년 선택 Picker */}
       <View style={styles.gradePickerWrapper}>
       <Picker
         selectedValue={grade}
@@ -294,6 +298,7 @@ function Sign({navigation}){
         </Picker>
       </View>
       </View>
+      {/* 생년월일 */}
       <Text style={styles.labelText}>생년월일</Text>
       <TextInput
         style={styles.input}
@@ -301,6 +306,7 @@ function Sign({navigation}){
         onChangeText={setBirth}
         placeholder="생년월일 (6자리)"
       />
+      {/* 성별 */}
       <Text style={styles.labelText}>성별</Text>
       <View style={styles.radioOptions}>
         <TouchableOpacity
@@ -320,6 +326,7 @@ function Sign({navigation}){
           <Text style={gender === '여자' ? styles.checkedOption : null}>여자</Text>
         </TouchableOpacity>
       </View>
+      {/* 이메일 */}
       <Text style={styles.labelText}>이메일</Text>
       <View style={styles.emailContainer}>
         <TextInput
@@ -328,6 +335,7 @@ function Sign({navigation}){
           onChangeText={setEmail}
           placeholder="메일 아이디"
         />
+        {/* 이메일 주소 선택 Picker */}
         <Text style={styles.atSymbol}>@</Text>
         {selectedEmailOption === '직접입력' ? (
           <>

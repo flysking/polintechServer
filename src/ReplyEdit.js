@@ -1,12 +1,12 @@
 import React, {useState, useLayoutEffect} from 'react';
-import {View, TextInput, Button, Alert, Text} from 'react-native';
+import {TouchableOpacity, View, TextInput, Button, Alert, Text} from 'react-native';
 
 const ReplyEdit = ({route, navigation}) => {
-  const reply_id = route.params.reply_id;
-  const reply_mid = route.params.reply_mid;
-  const reply_content = route.params.reply_content;
-  const reply_cid = route.params.reply_cid;
-  const {setTrigger} = route.params;
+  const reply_id = route.params.reply_id;//답글id
+  const reply_mid = route.params.reply_mid;//답글 작성자 id
+  const reply_content = route.params.reply_content;//답글 내용
+  const reply_cid = route.params.reply_cid; //댓글 id
+  const {setTrigger} = route.params;//변화 변수
 
   const [replyId, setReplyId] = useState(reply_id);
   const [replyMid, setReplyMid] = useState(reply_mid);
@@ -24,7 +24,7 @@ const ReplyEdit = ({route, navigation}) => {
     });
   }, [navigation]);
   const updateReply = async () => {
-    //답글 수정
+     //답글 수정 - 댓글 id, 답글 id, 작성자 id, 답글 수정 내용을 입력받아 DB에서 Update함
     try {
       const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/EditReply`, {
         method: 'POST',
@@ -54,7 +54,7 @@ const ReplyEdit = ({route, navigation}) => {
     }
   };
   const DeleteReply = async () => {
-    //답글 삭제
+    //답글 삭제 - 답글 id를 통해서 해당하는 답글을 DB에서 제거함
     try {
       console.log('답글 id(게시판) :', reply_id);
       const response = await fetch(
@@ -86,8 +86,14 @@ const ReplyEdit = ({route, navigation}) => {
         numberOfLines={5}
         style={{borderWidth: 1, marginBottom: 10, padding: 5}}
       />
-      <Button title="답글 수정" onPress={updateReply} />
-      <Button title="답글 삭제" onPress={DeleteReply} />
+      <View style={{flexDirection:'row',width:'100%',justifyContent:'center'}}>
+        <TouchableOpacity style={{borderRadius:15,marginHorizontal:5,backgroundColor:'#003497'}} onPress={updateReply} >
+          <Text style={{color:'#ffffff', padding:10,}}>답글 수정</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{borderRadius:15,marginHorizontal:5, backgroundColor:'#003497'}}  onPress={DeleteReply} >
+          <Text style={{color:'#ffffff', padding:10,}}>답글 삭제</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

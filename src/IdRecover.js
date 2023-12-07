@@ -5,6 +5,7 @@ const IdRecover = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
 
+  //db에서 이메일 확인 후 아이디 판별
   const handleFindIdByEmail = async () => {
     try {
       const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/findIdByEmail', {
@@ -23,7 +24,7 @@ const IdRecover = ({ navigation }) => {
       if (json.success) {
         // 이메일을 찾았을 때
         setId(json.member.id); // 서버로부터 받은 ID를 설정
-        Alert.alert('아이디를 찾았습니다: ' + json.member.id);
+        //Alert.alert('아이디를 찾았습니다: ' + json.member.id);
       } else {
         // 이메일을 찾지 못했을 때
         setId('');
@@ -105,8 +106,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   foundIdText: {
-    marginTop: 30,
-    fontSize: 15,
+    marginTop: 10,
   },
   topMenu:{
     flexDirection:'row',

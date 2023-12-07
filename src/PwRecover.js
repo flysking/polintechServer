@@ -4,6 +4,7 @@ import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'reac
 const PwRecover = ({ navigation }) => {
     const [id, setId] = useState('');
   
+    //db에서 아이디 확인 후 판별
     const handleFindId = async () => {
       try {
         const response = await fetch('https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/findId', {
@@ -21,8 +22,8 @@ const PwRecover = ({ navigation }) => {
         if (json.success) {
           // 아이디를 찾았을 때
           setId(json.member.id);
-          Alert.alert('아이디를 찾았습니다: ' + json.member.id);
-          navigation.navigate('PwEmailAuth');
+          //Alert.alert('아이디를 찾았습니다: ' + json.member.id);
+          navigation.navigate('PwEmailAuth', { id: id });
         } else {
           // 아이디를 찾지 못했을 때
           setId('');

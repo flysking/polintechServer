@@ -35,6 +35,7 @@ const CreateBoard = ({navigation}) => {
     useState('카테고리 선택');
   const [selectCategorySubOption, setSelectCategorySubOption] =
     useState('카테고리 선택');
+  //카테고리와 서브카테고리를 저장하는 배열들을 선언하였습니다.
   const categoryOptions = [
     '카테고리 선택',
     '학과게시판',
@@ -87,8 +88,10 @@ const CreateBoard = ({navigation}) => {
 }, [navigation]);
 
   const handleBoardImage = async boardId => {
+    /*이미지가 존재할 경우 실행되는 게시글 생성 함수
+    구글 클라우드에 이미지 파일을 업로드한후 
+    DB에 이미지 파일명과 게시글을 추가한다. */
     const formData = new FormData();
-    // const userInfo = await loadUserInfo();
     const member_id = id;
     formData.append('image', {
       uri: response?.assets[0]?.uri,
@@ -204,8 +207,8 @@ const CreateBoard = ({navigation}) => {
     } 
   };
   useEffect(() => {
+     //학과 카테고리를 선택시 로그인한 유저의 학과 정보를 불러와서 카테고리에 추가합니다
     let updatedOptions = ['카테고리 선택'];
-    let majorString;
     console.log('카테고리 선택 학과 : ', major);
 
     if (!updatedOptions.includes(major)) {
@@ -251,7 +254,7 @@ const CreateBoard = ({navigation}) => {
                   setCategory(categoryValue);
                 }
               }}>
-
+              {/* isAdmin값에 따라 학사일정 게시판이 피커에 추가되도록 합니다. */}
               {categoryOptions.map((option, index) => (
                 <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />
               ))}
@@ -273,6 +276,7 @@ const CreateBoard = ({navigation}) => {
                   setCategorySub(categorySubValue);
                 }
               }}>
+              {/*isAdmin이 1일 경우 공지 글을 작성할 수 있습니다. */}
               {category === '학과게시판' &&
                 categorySub_Options1.map((option, index) => (
                   <Picker.Item key={index} label={option} value={option} style={styles.pickerItem} />

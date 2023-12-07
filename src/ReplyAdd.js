@@ -1,10 +1,10 @@
 import React, {useState, useLayoutEffect} from 'react';
-import {View, TextInput, Button, Alert, Text} from 'react-native';
+import {TouchableOpacity,View, TextInput, Button, Alert, Text} from 'react-native';
 
 const ReplyAdd = ({route, navigation}) => {
-  const board_id = route.params.board_id;
-  const comment_id = route.params.comment_id;
-  const user_id = route.params.id;
+  const board_id = route.params.board_id; //게시글 id
+  const comment_id = route.params.comment_id; //댓글 id
+  const user_id = route.params.id; //로그인 회원 id
 
   const {setTrigger} = route.params;
   const [id, setId] = useState(user_id);
@@ -26,6 +26,7 @@ const ReplyAdd = ({route, navigation}) => {
 
   // 답글 저장 함수
   const handleReply = () => {
+    //게시글 id, 댓글 id,답글 내용,작성자 id를 통해서 답글을 DB에 추가한다.
     fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/ReplyAdd`, {
       method: 'POST',
       headers: {
@@ -70,7 +71,11 @@ const ReplyAdd = ({route, navigation}) => {
         numberOfLines={5}
         style={{borderWidth: 1, marginBottom: 10, padding: 5}}
       />
-      <Button title="답글 생성" onPress={handleReply} />
+        <View style={{flexDirection:'row',width:'100%',justifyContent:'center'}}>
+        <TouchableOpacity style={{borderRadius:15,marginHorizontal:5,backgroundColor:'#003497'}} onPress={handleReply} >
+          <Text style={{color:'#ffffff', padding:10,}}>답글 등록</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

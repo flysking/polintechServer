@@ -33,17 +33,11 @@ function TabSearch({navigation}) {
 
   // 검색 버튼 클릭 핸들러
   const handleSearch = async () => {
-    // const word = searchText;
-    // const subcategory = selectedOption;
-
-    // // JSON 형태로 데이터를 묶음
-    // const searchData = {
-    //   word: word,
-    //   subcategory: subcategory,
-    // };
     console.log(searchText);
     console.log(selectedOption);
     console.log(category);
+    //입력한 검색어, 옵션, 검색할 게시판 값을 서버에 전달해 게시글을 검색해옵니다.
+    //게시판 정보(카테고리)는 메인 페이지에서 게시판 상세 페이지로 넘어올 때 자동으로 설정됩니다.
     try {
       const response = await fetch(`https://port-0-polintechservercode-ac2nlkzlq8aw.sel4.cloudtype.app/BoardSearchList`, {
         method: 'POST',
@@ -60,7 +54,7 @@ function TabSearch({navigation}) {
         const data = await response.json();
         setBoards(data.boards);
         console.log('검색 결과:', data);
-        // 검색 결과를 처리하세요.
+
       } else {
         console.error('검색 요청 실패');
       }
